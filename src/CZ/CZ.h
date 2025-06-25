@@ -23,6 +23,8 @@ namespace CZ
     template<typename...Args> class CZListenerTemplate;
 
     class CZRegionUtils;
+    class CZStringUtils;
+    class CZVectorUtils;
 
     /// @brief 64 bits unsigned integer
     typedef uint64_t UInt64;
