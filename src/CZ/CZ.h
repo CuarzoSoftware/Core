@@ -25,6 +25,13 @@ namespace CZ
     class CZRegionUtils;
     class CZStringUtils;
     class CZVectorUtils;
+    class CZMathUtils;
+
+    enum class CZOwnership
+    {
+        Borrow,
+        Transfer
+    };
 
     /// @brief 64 bits unsigned integer
     typedef uint64_t UInt64;
