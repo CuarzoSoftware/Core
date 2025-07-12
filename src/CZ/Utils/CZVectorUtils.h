@@ -20,6 +20,16 @@ public:
         vec.pop_back();
         return true;
     }
+
+    template <typename T>
+    static inline void DeleteAndPopBackAll(std::vector<T*>& vec) noexcept
+    {
+        while (!vec.empty())
+        {
+            delete vec.back();
+            vec.pop_back();
+        }
+    }
 };
 
 #endif // CZVECTORUTILS_H

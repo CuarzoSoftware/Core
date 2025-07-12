@@ -21,6 +21,7 @@ namespace CZ
     template<typename...Args> class CZSignal;
     class CZListener;
     template<typename...Args> class CZListenerTemplate;
+    class CZLogger;
 
     class CZRegionUtils;
     class CZStringUtils;
@@ -30,7 +31,7 @@ namespace CZ
     enum class CZOwnership
     {
         Borrow,
-        Transfer
+        Own
     };
 
     /// @brief 64 bits unsigned integer
