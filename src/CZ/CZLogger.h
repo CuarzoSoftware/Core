@@ -15,7 +15,8 @@ namespace CZ
 {
     enum CZLogLevel : UInt32
     {
-        CZFatal = 1u,
+        CZSilent = 0u,
+        CZFatal,
         CZError,
         CZWarning,
         CZInfo,
@@ -27,14 +28,16 @@ namespace CZ
 class CZ::CZLogger
 {
 public:
-    CZLogger(const std::string &ns = "") noexcept : m_ns{ns} {}
+    CZLogger(const std::string &ns = "", const char *env = nullptr) noexcept;
 
     const std::string &ns() const noexcept { return m_ns; }
     const std::string &ctx() const noexcept { return m_ctx; }
 
+    CZLogLevel level() const noexcept { return *m_lvl; }
+
     void setLevel(CZLogLevel level) const noexcept
     {
-        *m_lvl = std::clamp<UInt32>(level, 0, CZTrace);
+        *m_lvl = std::clamp<CZLogLevel>(level, CZSilent, CZTrace);
     }
 
     [[nodiscard]] CZLogger newWithContext(const std::string &context) const noexcept
@@ -73,7 +76,7 @@ public:
 private:
     static inline constexpr std::array<std::string_view, 7> LogLevelString
     {
-        "",
+        "Silent",
         "Fatal",
         "Error",
         "Warning",
@@ -92,7 +95,7 @@ private:
         "\033[36m", // Debug   - Cyan
         "\033[37m"  // Trace   - Light Gray
     };
-    std::shared_ptr<UInt32> m_lvl { new UInt32() };
+    std::shared_ptr<CZLogLevel> m_lvl { new CZLogLevel() };
     std::string m_ns;
     std::string m_ctx;
 };
