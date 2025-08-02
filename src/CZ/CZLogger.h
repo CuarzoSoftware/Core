@@ -67,10 +67,10 @@ public:
 
         if (level < CZWarning)
             std::cerr << LogLevelColor[level] << m_ns << " " << LogLevelString[level] << "\033[0m: " << m_ctx << std::format(fmt, std::forward<Args>(args)...) << " "
-                      << source.function_name() << " " << source.file_name() << "(" << source.line() << ":" << source.column() << ")\n";
+                      << source.file_name() << "(" << source.line() << ":" << source.column() << ")\n";
         else if (level <= CZTrace)
             std::cout << LogLevelColor[level] << m_ns << " " << LogLevelString[level] << "\033[0m: " << m_ctx << std::format(fmt, std::forward<Args>(args)...) << " "
-                      << source.function_name() << " " << source.file_name() << "(" << source.line() << ":" << source.column() << ")\n";
+                      << source.file_name() << "(" << source.line() << ":" << source.column() << ")\n";
     }
 
 private:

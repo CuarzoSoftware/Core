@@ -9,6 +9,14 @@ class CZ::CZVectorUtils
 {
 public:
     template <typename T>
+    static inline void RemoveOne(std::vector<T>& vec, T val) noexcept
+    {
+        const auto it { std::find(vec.begin(), vec.end(), val) };
+        if (it != vec.end())
+            vec.erase(it);
+    }
+
+    template <typename T>
     static inline bool RemoveOneUnordered(std::vector<T>& vec, T val) noexcept
     {
         auto it { std::find(vec.begin(), vec.end(), val) };
