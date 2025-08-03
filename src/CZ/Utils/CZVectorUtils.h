@@ -1,7 +1,7 @@
 #ifndef CZVECTORUTILS_H
 #define CZVECTORUTILS_H
 
-#include <CZ/CZ.h>
+#include <CZ/Cuarzo.h>
 #include <vector>
 #include <algorithm>
 

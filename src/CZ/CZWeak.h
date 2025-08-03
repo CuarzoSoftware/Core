@@ -1,7 +1,7 @@
 #ifndef CZWEAK_H
 #define CZWEAK_H
 
-#include <CZ/CZ.h>
+#include <CZ/Cuarzo.h>
 #include <functional>
 
 class CZ::CZWeakUtils

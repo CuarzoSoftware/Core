@@ -1,7 +1,7 @@
 #ifndef CZLISTENER_H
 #define CZLISTENER_H
 
-#include <CZ/CZ.h>
+#include <CZ/Cuarzo.h>
 #include <cstddef>
 #include <functional>
 

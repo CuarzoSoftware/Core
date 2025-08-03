@@ -1,5 +1,5 @@
-#ifndef CZ_CZ_H
-#define CZ_CZ_H
+#ifndef CZ_CUARZO_H
+#define CZ_CUARZO_H
 
 #include <cstdint>
 
@@ -27,12 +27,6 @@ namespace CZ
     class CZStringUtils;
     class CZVectorUtils;
     class CZMathUtils;
-
-    enum class CZOwnership
-    {
-        Borrow,
-        Own
-    };
 
     /// @brief 64 bits unsigned integer
     typedef uint64_t UInt64;
@@ -65,12 +59,11 @@ namespace CZ
     typedef float    Float32;
 }
 
-class SkRect;
-class SkIRect;
-class SkPoint;
-class SkIPoint;
-class SkSize;
-class SkISize;
+struct SkPoint;
+struct SkIPoint;
+struct SkSize;
+struct SkISize;
+struct SkRect;
 class SkRegion;
 
 #endif

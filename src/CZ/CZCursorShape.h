@@ -1,7 +1,7 @@
 #ifndef CZ_CURSORSHAPE_H
 #define CZ_CURSORSHAPE_H
 
-#include <CZ/CZ.h>
+#include <CZ/Cuarzo.h>
 
 namespace CZ
 {

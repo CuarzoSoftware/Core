@@ -1,7 +1,7 @@
 #ifndef CZTRANSFORM_H
 #define CZTRANSFORM_H
 
-#include <CZ/CZ.h>
+#include <CZ/Cuarzo.h>
 
 namespace CZ
 {

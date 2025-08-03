@@ -1,7 +1,7 @@
 #ifndef CZBITSET_H
 #define CZBITSET_H
 
-#include <CZ/CZ.h>
+#include <CZ/Cuarzo.h>
 #include <type_traits>
 
 namespace CZ

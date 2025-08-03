@@ -1,7 +1,7 @@
 #ifndef CZSTRINGUTILS_H
 #define CZSTRINGUTILS_H
 
-#include <CZ/CZ.h>
+#include <CZ/Cuarzo.h>
 #include <string>
 
 class CZ::CZStringUtils

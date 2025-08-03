@@ -1,7 +1,7 @@
 #ifndef CZEVENT_H
 #define CZEVENT_H
 
-#include <CZ/CCore.h>
+#include <CZ/Cuarzo.h>
 
 /* Used to override copy() in a subclass */
 #define CZ_EVENT_DECLARE_COPY CZEvent *copy() const noexcept override { return new CZ_GET_CLASS_TYPE(this)(*this); }
@@ -36,16 +36,20 @@ public:
         PointerHoldEnd,
         Pointer_Last = PointerHoldEnd,
 
-        KeyboardKey,
+        Keyboard_First,
+        KeyboardKey = Keyboard_First,
         KeyboardModifiers,
         KeyboardEnter,
         KeyboardLeave,
+        Keyboard_Last = KeyboardLeave,
 
-        TouchMove,
+        Touch_First,
+        TouchMove =  Touch_First,
         TouchFrame,
         TouchDown,
         TouchUp,
         TouchCancel,
+        Touch_Last = TouchCancel,
 
         WindowState,
         WindowClose,
@@ -69,10 +73,7 @@ public:
     /**
      * @brief Retrieves the type of the event.
      */
-    Type type() const noexcept
-    {
-        return m_type;
-    }
+    Type type() const noexcept { return m_type; }
 
     /**
      * @brief Checks if the event type is any of the given types.
@@ -88,21 +89,12 @@ public:
         return false;
     }
 
-    /**
-     * @brief Sets the serial of the event.
-     */
-    void setSerial(UInt32 serial) noexcept
-    {
-        m_serial = serial;
-    }
+    bool isPointer() const noexcept { return type() >= Pointer_First && type() <= Pointer_Last; };
+    bool isKeyboard() const noexcept { return type() >= Keyboard_First && type() <= Keyboard_Last; };
+    bool isTouch() const noexcept { return type() >= Touch_First && type() <= Touch_Last; };
 
-    /**
-     * @brief Retrieves the serial of the event.
-     */
-    UInt32 serial() const noexcept
-    {
-        return m_serial;
-    }
+    UInt32 serial {};
+    void *userData {};
 
     /**
      * @brief Creates a deep copy of the event.
@@ -111,35 +103,11 @@ public:
      *
      * @note The returned event must be deleted when no longer used.
      */
-    virtual CZEvent *copy() const noexcept
-    {
-        return new CZEvent(*this);
-    }
+    virtual CZEvent *copy() const noexcept { return new CZEvent(*this); }
 
-    void setUserData(void *data) noexcept
-    {
-        m_userData = data;
-    }
-
-    void *userData() const noexcept
-    {
-        return m_userData;
-    }
-
-    bool isAccepted() const noexcept
-    {
-        return m_isAccepted;
-    }
-
-    void accept() const noexcept
-    {
-        m_isAccepted = true;
-    }
-
-    void ignore() const noexcept
-    {
-        m_isAccepted = false;
-    }
+    bool isAccepted() const noexcept { return m_isAccepted; }
+    void accept() const noexcept { m_isAccepted = true; }
+    void ignore() const noexcept { m_isAccepted = false; }
 
 protected:
     CZEvent(Type type, UInt32 serial) noexcept :
@@ -148,7 +116,6 @@ protected:
     {}
     Type m_type;
     UInt32 m_serial;
-    void *m_userData { nullptr };
     mutable bool m_isAccepted { true };
 };
 

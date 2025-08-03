@@ -1,7 +1,7 @@
 #ifndef CZLOGGER_H
 #define CZLOGGER_H
 
-#include <CZ/CZ.h>
+#include <CZ/Cuarzo.h>
 #include <iostream>
 #include <algorithm>
 #include <format>
