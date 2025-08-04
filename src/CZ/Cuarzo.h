@@ -12,8 +12,12 @@
 
 namespace CZ
 {
+    class CZCore;
     class CZObject;
     class CZEvent;
+    class CZEventSource;
+    class CZBooleanEventSource;
+    class CZSafeEventQueue;
     class CZWeakUtils;
     template <class T> class CZWeak;
     template <class T> class CZBitset;

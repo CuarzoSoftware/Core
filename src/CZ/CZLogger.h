@@ -30,7 +30,10 @@ class CZ::CZLogger
 public:
     CZLogger(const std::string &ns = "", const char *env = nullptr) noexcept;
 
+    /// Namespace e.g. "Louvre" => Louvre Warning: ...
     const std::string &ns() const noexcept { return m_ns; }
+
+    /// Context e.g. "Object 1" => Namespace Warning: [Object 1] ...
     const std::string &ctx() const noexcept { return m_ctx; }
 
     CZLogLevel level() const noexcept { return *m_lvl; }
@@ -40,6 +43,7 @@ public:
         *m_lvl = std::clamp<CZLogLevel>(level, CZSilent, CZTrace);
     }
 
+    /// Creates a new logger with this context + the appended context (the level is shared)
     [[nodiscard]] CZLogger newWithContext(const std::string &context) const noexcept
     {
         CZLogger newLogger(*this);

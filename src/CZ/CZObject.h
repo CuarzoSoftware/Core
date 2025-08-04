@@ -60,13 +60,13 @@ protected:
      */
     void notifyDestruction() noexcept;
 
-    virtual bool event(CZEvent *event)
+    virtual bool event(const CZEvent &event) noexcept
     {
         CZ_UNUSED(event)
         return false;
     }
 
-    virtual bool eventFilter(CZEvent *event, CZObject *target)
+    virtual bool eventFilter(const CZEvent &event, CZObject &target) noexcept
     {
         CZ_UNUSED(event)
         CZ_UNUSED(target)
