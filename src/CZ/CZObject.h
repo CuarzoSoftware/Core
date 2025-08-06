@@ -15,30 +15,12 @@ class CZ::CZObject
 public:
     CZ_DISABLE_COPY(CZObject)
 
-    /**
-     * @brief Sets the user data.
-     */
-    void setUserData(void *data) const noexcept
-    {
-        m_userData = data;
-    }
-
-    /**
-     * @brief Retrieves the stored user data.
-     *
-     * `nullptr` by default.
-     */
-    void *userData() const noexcept
-    {
-        return m_userData;
-    }
-
+    void *userData {};
     CZSignal<CZObject*> onDestroy;
 
     void installEventFilter(CZObject *monitor) const noexcept;
     void removeEventFilter(CZObject *monitor) const noexcept;
     void destroyLater() noexcept;
-protected:
 
     /**
      * @brief Constructor of the CZObject class.
@@ -49,6 +31,8 @@ protected:
      * @brief Destructor of the CZObject class.
      */
     virtual ~CZObject() noexcept;
+
+protected:
 
     /**
      * @brief Notifies the object destruction.
@@ -76,12 +60,11 @@ protected:
 private:
     friend class CZWeakUtils;
     friend class CZListener;
-    friend class CZApplication;
+    friend class CZCore;
     mutable std::list<CZObject*> m_installedEventFilters;
     mutable std::unordered_map<CZObject*, std::list<CZObject*>::iterator> m_eventFilterSubscriptions;
     std::vector<CZListener*> m_listeners;
     mutable std::vector<void*> m_weakRefs;
-    mutable void *m_userData { nullptr };
     bool m_destroyed { false };
 };
 #endif

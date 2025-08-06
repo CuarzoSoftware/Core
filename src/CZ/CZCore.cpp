@@ -1,4 +1,5 @@
 #include <CZ/CZCore.h>
+#include <CZ/Events/CZEvent.h>
 
 using namespace CZ;
 
@@ -43,6 +44,29 @@ int CZCore::dispatch(int msTimeout) noexcept
     }
 
     return ret;
+}
+
+bool CZCore::sendEvent(const CZEvent &event, CZObject &object) noexcept
+{
+    event.accept();
+
+    if (event.type() == CZEvent::Type::Destroy)
+    {
+        delete &object;
+        return true;
+    }
+
+    for (CZObject *filter : object.m_installedEventFilters)
+        if (filter->eventFilter(event, object))
+            return true;
+
+    return object.event(event);
+}
+
+void CZCore::postEvent(const CZEvent &event, CZObject &object) noexcept
+{
+    unlockLoop();
+    m_eventQueue.addEvent(event, object);
 }
 
 CZCore::CZCore() noexcept

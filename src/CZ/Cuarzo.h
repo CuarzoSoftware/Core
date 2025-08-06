@@ -14,7 +14,8 @@ namespace CZ
 {
     class CZCore;
     class CZObject;
-    class CZEvent;
+    class CZTime;
+    class CZInputDevice;
     class CZEventSource;
     class CZBooleanEventSource;
     class CZSafeEventQueue;
@@ -31,6 +32,37 @@ namespace CZ
     class CZStringUtils;
     class CZVectorUtils;
     class CZMathUtils;
+
+    class CZEvent;
+    class CZInputEvent;
+
+    class CZPointerEnterEvent;
+    class CZPointerMoveEvent;
+    class CZPointerScrollEvent;
+    class CZPointerButtonEvent;
+    class CZPointerLeaveEvent;
+    class CZPointerSwipeBeginEvent;
+    class CZPointerSwipeUpdateEvent;
+    class CZPointerSwipeEndEvent;
+    class CZPointerPinchBeginEvent;
+    class CZPointerPinchUpdateEvent;
+    class CZPointerPinchEndEvent;
+    class CZPointerHoldBeginEvent;
+    class CZPointerHoldEndEvent;
+
+    class CZKeyboardEnterEvent;
+    class CZKeyboardLeaveEvent;
+    class CZKeyboardKeyEvent;
+    class CZKeyboardModifiersEvent;
+
+    class CZTouchDownEvent;
+    class CZTouchUpEvent;
+    class CZTouchMoveEvent;
+    class CZTouchFrameEvent;
+    class CZTouchCancelEvent;
+
+    class CZInputDevicePluggedEvent;
+    class CZInputDeviceUnpluggedEvent;
 
     /// @brief 64 bits unsigned integer
     typedef uint64_t UInt64;
@@ -68,6 +100,7 @@ struct SkIPoint;
 struct SkSize;
 struct SkISize;
 struct SkRect;
+struct SkIRect;
 class SkRegion;
 
 #endif

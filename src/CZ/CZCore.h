@@ -16,10 +16,16 @@ public:
     int fd() const noexcept { return m_epollFd; }
     void unlockLoop() noexcept;
     int dispatch(int msTimeout = -1) noexcept;
+
+    /// Sent immediately, true if accepted, false if ignored
+    bool sendEvent(const CZEvent &event, CZObject &object) noexcept;
+
+    /// Enqueued and sent later
+    void postEvent(const CZEvent &event, CZObject &object) noexcept;
+    ~CZCore() noexcept;
 private:
     friend class CZEventSource;
     CZCore() noexcept;
-    ~CZCore() noexcept;
     void init() noexcept;
     void updateEventSources() noexcept;
     int m_epollFd;

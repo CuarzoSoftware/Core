@@ -3,6 +3,7 @@
 
 #include <CZ/CZObject.h>
 #include <CZ/CZWeak.h>
+#include <CZ/Events/CZEvent.h>
 #include <memory>
 #include <queue>
 

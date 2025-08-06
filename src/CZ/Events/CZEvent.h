@@ -1,9 +1,12 @@
-#ifndef CZEVENT_H
-#define CZEVENT_H
+#ifndef CZ_CZEVENT_H
+#define CZ_CZEVENT_H
 
 #include <CZ/Cuarzo.h>
+#include <CZ/CZTime.h>
+#include <type_traits>
 
-/* Used to override copy() in a subclass */
+#define CZ_GET_CLASS_TYPE(x) std::remove_cv_t<std::remove_reference_t<decltype(*(x))>>
+// Used to override copy() in a subclass
 #define CZ_EVENT_DECLARE_COPY CZEvent *copy() const noexcept override { return new CZ_GET_CLASS_TYPE(this)(*this); }
 
 /**
@@ -13,14 +16,14 @@ class CZ::CZEvent
 {
 public:
 
-    /**
-     * @brief Defines the type of event.
-     */
-    enum Type
+    enum class Type
     {
+        /* Cuarzo */
+
         Destroy,
 
-        Pointer_First,
+        Input_First,
+        Pointer_First = Input_First,
         PointerMove = Pointer_First,
         PointerScroll,
         PointerButton,
@@ -50,6 +53,10 @@ public:
         TouchUp,
         TouchCancel,
         Touch_Last = TouchCancel,
+        Input_Last = Touch_Last,
+
+        InputDevicePlugged,
+        InputDeviceUnplugged,
 
         WindowState,
         WindowClose,
@@ -89,12 +96,10 @@ public:
         return false;
     }
 
-    bool isPointer() const noexcept { return type() >= Pointer_First && type() <= Pointer_Last; };
-    bool isKeyboard() const noexcept { return type() >= Keyboard_First && type() <= Keyboard_Last; };
-    bool isTouch() const noexcept { return type() >= Touch_First && type() <= Touch_Last; };
-
-    UInt32 serial {};
-    void *userData {};
+    bool isInputEvent() const noexcept { return type() >= Type::Input_First && type() <= Type::Input_Last; }
+    bool isPointerEvent() const noexcept { return type() >= Type::Pointer_First && type() <= Type::Pointer_Last; };
+    bool isKeyboardEvent() const noexcept { return type() >= Type::Keyboard_First && type() <= Type::Keyboard_Last; };
+    bool isTouchEvent() const noexcept { return type() >= Type::Touch_First && type() <= Type::Touch_Last; };
 
     /**
      * @brief Creates a deep copy of the event.
@@ -103,24 +108,18 @@ public:
      *
      * @note The returned event must be deleted when no longer used.
      */
-    virtual CZEvent *copy() const noexcept { return new CZEvent(*this); }
+    virtual CZEvent *copy() const noexcept = 0;
 
     bool isAccepted() const noexcept { return m_isAccepted; }
     void accept() const noexcept { m_isAccepted = true; }
     void ignore() const noexcept { m_isAccepted = false; }
 
+    UInt32 serial { CZTime::NextSerial() };
+    void *userData {};
 protected:
-    CZEvent(Type type, UInt32 serial) noexcept :
-        m_type(type),
-        m_serial(serial)
-    {}
+    CZEvent(Type type) noexcept : m_type(type){}
     Type m_type;
-    UInt32 m_serial;
     mutable bool m_isAccepted { true };
 };
 
-/**
- * @}
- */
-
-#endif // CZ_CORE_EVENT_H
+#endif // CZ_CZEVENT_H
