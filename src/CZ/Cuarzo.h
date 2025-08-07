@@ -28,6 +28,7 @@ namespace CZ
     template<typename...Args> class CZListenerTemplate;
     class CZLogger;
 
+    class CZSharedMemory;
     class CZRegionUtils;
     class CZStringUtils;
     class CZVectorUtils;
