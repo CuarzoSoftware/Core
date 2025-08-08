@@ -9,7 +9,7 @@
 class CZ::CZSharedMemory : public CZObject
 {
 public:
-    std::shared_ptr<CZSharedMemory> Make(size_t size, int oflag = O_RDWR | O_CREAT | O_EXCL, mode_t mode = 0666) noexcept;
+    static std::shared_ptr<CZSharedMemory> Make(size_t size, int oflag = O_RDWR | O_CREAT | O_EXCL, mode_t mode = 0666) noexcept;
     int fd() const noexcept { return m_fd; }
     const std::string &name() const noexcept { return m_name; }
     void *map() const noexcept { return m_map; }
