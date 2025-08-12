@@ -25,6 +25,15 @@ public:
     ~CZCore() noexcept;
 private:
     friend class CZEventSource;
+    friend class LCompositor;
+
+    enum class Owner
+    {
+        None,
+        Louvre,
+        Marco
+    };
+
     CZCore() noexcept;
     void init() noexcept;
     void updateEventSources() noexcept;
@@ -34,6 +43,7 @@ private:
     std::vector<std::shared_ptr<CZEventSource>> m_pendingEventSources;
     std::shared_ptr<CZBooleanEventSource> m_loopUnlocker;
     CZSafeEventQueue m_eventQueue;
+    Owner m_owner { Owner::None };
 };
 
 #endif // CZCORE_H

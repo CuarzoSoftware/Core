@@ -18,6 +18,7 @@ namespace CZ
     class CZInputDevice;
     class CZEventSource;
     class CZBooleanEventSource;
+    class CZTimer;
     class CZSafeEventQueue;
     class CZWeakUtils;
     template <class T> class CZWeak;
