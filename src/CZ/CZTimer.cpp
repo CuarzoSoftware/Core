@@ -69,7 +69,7 @@ void CZTimer::init() noexcept
 {
     m_source = CZEventSource::Make(timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC), EPOLLIN, [this](int fd, UInt32) {
         UInt64 expirations;
-        read(fd, &expirations, sizeof(expirations));
+        assert(read(fd, &expirations, sizeof(expirations)) == sizeof(expirations));
 
         constexpr itimerspec timeout { {0, 0}, {0, 0} };
         timerfd_settime(fd, 0, &timeout, nullptr);

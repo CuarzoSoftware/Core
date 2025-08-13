@@ -1,8 +1,9 @@
-#ifndef CZ_CZSCOPEDFD_H
-#define CZ_CZSCOPEDFD_H
+#ifndef CZ_CZSPFD_H
+#define CZ_CZSPFD_H
 
-#include <CZ/CZ.h>
+#include <CZ/CZLog.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 namespace CZ
 {
@@ -13,40 +14,40 @@ namespace CZ
      * This class is move-only: copy operations are disabled to prevent accidental sharing
      * of the same file descriptor ownership.
      */
-    class CZScopedFd
+    class CZSpFd
     {
     public:
         /**
-         * @brief Construct a CZScopedFd.
+         * @brief Construct a CZSpFd.
          * @param fd The file descriptor to wrap, or -1 if none.
          */
-        explicit CZScopedFd(int fd = -1) noexcept : m_fd(fd) {}
+        explicit CZSpFd(int fd = -1) noexcept : m_fd(fd) {}
 
         /**
-         * @brief Destroy the CZScopedFd and close the file descriptor if valid.
+         * @brief Destroy the CZSpFd and close the file descriptor if valid.
          */
-        ~CZScopedFd() noexcept { close(); }
+        ~CZSpFd() noexcept { close(); }
 
-        CZScopedFd(const CZScopedFd&) = delete;
-        CZScopedFd& operator=(const CZScopedFd&) = delete;
+        CZSpFd(const CZSpFd&) = delete;
+        CZSpFd& operator=(const CZSpFd&) = delete;
 
         /**
          * @brief Move constructor.
-         * Transfers ownership from another CZScopedFd and invalidates the source.
+         * Transfers ownership from another CZSpFd and invalidates the source.
          * @param other The object to move from.
          */
-        CZScopedFd(CZScopedFd&& other) noexcept : m_fd(other.m_fd)
+        CZSpFd(CZSpFd&& other) noexcept : m_fd(other.m_fd)
         {
             other.m_fd = -1;
         }
 
         /**
          * @brief Move assignment.
-         * Closes the current descriptor and transfers ownership from another CZScopedFd.
+         * Closes the current descriptor and transfers ownership from another CZSpFd.
          * @param other The object to move from.
          * @return Reference to this object.
          */
-        CZScopedFd& operator=(CZScopedFd&& other) noexcept
+        CZSpFd& operator=(CZSpFd&& other) noexcept
         {
             if (m_fd != other.m_fd)
             {
@@ -71,7 +72,7 @@ namespace CZ
          *
          * @param fd The new file descriptor.
          */
-        void set(int fd) noexcept
+        void reset(int fd) noexcept
         {
             if (fd == m_fd) return;
             close();
@@ -93,6 +94,27 @@ namespace CZ
         }
 
         /**
+         * @brief Dup the file descriptor.
+         *
+         * @return The new file descriptor, or -1 on failure.
+         */
+        [[nodiscard]] CZSpFd dup() const noexcept
+        {
+            if (m_fd < 0)
+                return CZSpFd {};
+
+            const int fd { fcntl(m_fd, F_DUPFD_CLOEXEC, 0) };
+
+            if (fd < 0)
+            {
+                CZLog(CZError, CZLN, "Failed to dup fd");
+                return CZSpFd {};
+            }
+
+            return CZSpFd {fd};
+        }
+
+        /**
          * @brief Close the stored file descriptor if valid.
          *
          * @return true if a descriptor was closed, false if it was already invalid.
@@ -110,5 +132,4 @@ namespace CZ
     };
 }
 
-
-#endif // CZ_CZSCOPEDFD_H
+#endif // CZ_CZSPFD_H
