@@ -1,7 +1,7 @@
 #ifndef CZSHAREDMEMORY_H
 #define CZSHAREDMEMORY_H
 
-#include <CZObject.h>
+#include <CZ/CZObject.h>
 #include <memory>
 #include <fcntl.h>
 #include <sys/mman.h>
