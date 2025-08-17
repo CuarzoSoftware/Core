@@ -34,6 +34,7 @@ namespace CZ
     class CZStringUtils;
     class CZVectorUtils;
     class CZMathUtils;
+    class CZSetUtils;
 
     class CZEvent;
     class CZInputEvent;
