@@ -65,7 +65,7 @@ public:
     };
 
     static std::shared_ptr<CZInputDevice> Make(CZBitset<Capability> caps = 0, const std::string &name = "Unknown",
-        UInt32 vendorId = 0, UInt32 productId = 0,  NativeHandleType nativeHandleType = NativeHandleType::None, void *nativeHandle = nullptr) noexcept
+        UInt32 vendorId = 0, UInt32 productId = 0,  NativeHandleType nativeHandleType = NativeHandleType::None, NativeHandle nativeHandle = {}) noexcept
     {
         return std::shared_ptr<CZInputDevice>(new CZInputDevice(caps, name, vendorId, productId, nativeHandleType, nativeHandle));
     }
@@ -100,7 +100,7 @@ public:
     NativeHandleType nativeHandleType;
 
 private:
-    CZInputDevice(CZBitset<Capability> caps, const std::string &name, UInt32 vendorId, UInt32 productId, NativeHandleType nativeHandleType, void *nativeHandle) noexcept :
+    CZInputDevice(CZBitset<Capability> caps, const std::string &name, UInt32 vendorId, UInt32 productId, NativeHandleType nativeHandleType, NativeHandle nativeHandle) noexcept :
         caps(caps), name(name), productId(productId), vendorId(vendorId), nativeHandle(nativeHandle), nativeHandleType(nativeHandleType) {}
 };
 

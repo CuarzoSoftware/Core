@@ -37,7 +37,11 @@ namespace CZ
     class CZSetUtils;
 
     class CZEvent;
-    class CZInputEvent;
+    class CZDestroyEvent;
+    class CZCloseEvent;
+    class CZDestroyEvent;
+    class CZLayoutEvent;
+    class CZInputEvent;    
 
     class CZPointerEnterEvent;
     class CZPointerMoveEvent;
@@ -66,6 +70,8 @@ namespace CZ
 
     class CZInputDevicePluggedEvent;
     class CZInputDeviceUnpluggedEvent;
+
+    class CZWindowStateEvent;
 
     /// @brief 64 bits unsigned integer
     typedef uint64_t UInt64;

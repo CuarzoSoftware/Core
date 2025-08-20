@@ -21,6 +21,7 @@ public:
         /* Cuarzo */
 
         Destroy,
+        Close,
 
         Input_First,
         Pointer_First = Input_First,
@@ -59,12 +60,11 @@ public:
         InputDeviceUnplugged,
 
         WindowState,
-        WindowClose,
 
         Render,
         Bake,
 
-        SceneChanged,
+        AKSceneChanged,
         Layout,
 
         Vibrancy,
