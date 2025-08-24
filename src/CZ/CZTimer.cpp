@@ -85,5 +85,5 @@ void CZTimer::init() noexcept
             delete this;
     });
 
-    assert("CZTimers must be created after AKApplication" && m_source);
+    assert("CZTimers must be created after a CZCore" && m_source);
 }

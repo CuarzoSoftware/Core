@@ -22,9 +22,15 @@ public:
 
     /// Enqueued and sent later
     void postEvent(const CZEvent &event, CZObject &object) noexcept;
+
+    void updateAnimations() noexcept;
+    bool autoUpdateAnimations() const noexcept { return m_autoUpdateAnimations; };
+    void setAutoUpdateAnimations(bool autoUpdate) noexcept;
+
     ~CZCore() noexcept;
 private:
     friend class CZEventSource;
+    friend class CZAnimation;
     friend class LCompositor;
 
     enum class Owner
@@ -44,6 +50,11 @@ private:
     std::shared_ptr<CZBooleanEventSource> m_loopUnlocker;
     CZSafeEventQueue m_eventQueue;
     Owner m_owner { Owner::None };
+
+    std::vector<CZAnimation*> m_animations;
+    std::unique_ptr<CZTimer> m_animationsTimer;
+    bool m_animationsChanged { false };
+    bool m_autoUpdateAnimations { true };
 };
 
 #endif // CZCORE_H

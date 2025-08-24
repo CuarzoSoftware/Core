@@ -1,4 +1,6 @@
 #include <CZ/CZCore.h>
+#include <CZ/CZTimer.h>
+#include <CZ/CZAnimation.h>
 #include <CZ/Events/CZEvent.h>
 
 using namespace CZ;
@@ -93,6 +95,11 @@ void CZCore::init() noexcept
         CZSafeEventQueue tmp { std::move(m_eventQueue) };
         tmp.dispatch();
     });
+
+    m_animationsTimer = std::make_unique<CZTimer>();
+    m_animationsTimer->setCallback([this](CZTimer*) {
+        updateAnimations();
+    });
 }
 
 void CZCore::updateEventSources() noexcept
@@ -118,4 +125,75 @@ void CZCore::updateEventSources() noexcept
     }
 
     m_epollEvents.resize(m_currentEventSources.size());
+}
+
+void CZCore::updateAnimations() noexcept
+{
+    Int64 elapsed;
+    Int64 duration;
+    bool anyRunning { false };
+
+    for (CZAnimation *a : m_animations)
+        a->m_processed = false;
+
+retry:
+    m_animationsChanged = false;
+
+    for (CZAnimation *a : m_animations)
+    {
+        if (a->m_processed)
+            continue;
+
+        if (a->m_pendingDestroy)
+        {
+            delete a;
+            goto retry;
+        }
+
+        a->m_processed = true;
+
+        if (!a->m_running)
+            continue;
+
+        elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                      std::chrono::steady_clock::now() - a->m_beginTime).count();
+
+        duration = static_cast<Int64>(a->m_duration);
+
+        if (elapsed >= duration)
+            a->m_value = 1.0;
+        else
+            a->m_value = static_cast<Float64>(elapsed)/static_cast<Float64>(duration);
+
+        if (a->m_onUpdate)
+        {
+            anyRunning = true;
+            a->m_onUpdate(a);
+
+            if (m_animationsChanged)
+                goto retry;
+        }
+
+        if (a->m_value == 1.0)
+        {
+            a->stop();
+
+            if (m_animationsChanged)
+                goto retry;
+        }
+    }
+
+    if (anyRunning && m_autoUpdateAnimations)
+        m_animationsTimer->start(8);
+}
+
+void CZCore::setAutoUpdateAnimations(bool autoUpdate) noexcept
+{
+    if (autoUpdate == m_autoUpdateAnimations)
+        return;
+
+    m_autoUpdateAnimations = autoUpdate;
+
+    if (autoUpdate)
+        m_animationsTimer->start(8);
 }
