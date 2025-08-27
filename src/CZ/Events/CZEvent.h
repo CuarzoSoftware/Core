@@ -69,6 +69,8 @@ public:
 
         Vibrancy,
 
+        LSurfaceCommit,
+
         User = 1000
     };
 
