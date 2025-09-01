@@ -1,8 +1,8 @@
 #ifndef CZ_CZEVENT_H
 #define CZ_CZEVENT_H
 
-#include <CZ/Cuarzo.h>
-#include <CZ/CZTime.h>
+#include <CZ/Core/Cuarzo.h>
+#include <CZ/Core/CZTime.h>
 #include <type_traits>
 
 #define CZ_GET_CLASS_TYPE(x) std::remove_cv_t<std::remove_reference_t<decltype(*(x))>>
@@ -70,6 +70,7 @@ public:
         Vibrancy,
 
         LSurfaceCommit,
+        LSurfaceUnlock,
 
         User = 1000
     };

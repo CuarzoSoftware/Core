@@ -2,8 +2,8 @@
 #define CZ_CZWINDOWSTATEEVENT_H
 
 #include <CZ/Events/CZEvent.h>
-#include <CZ/CZWindowState.h>
-#include <CZ/CZBitset.h>
+#include <CZ/Core/CZWindowState.h>
+#include <CZ/Core/CZBitset.h>
 
 class CZ::CZWindowStateEvent : public CZEvent
 {

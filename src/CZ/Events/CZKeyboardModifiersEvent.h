@@ -2,7 +2,7 @@
 #define CZ_CZKEYBOARDMODIFIERSEVENT_H
 
 #include <CZ/Events/CZInputEvent.h>
-#include <CZ/CZKeyModifiers.h>
+#include <CZ/Core/CZKeyModifiers.h>
 
 /**
  * @brief Keyboard modifiers event.

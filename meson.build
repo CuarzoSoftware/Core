@@ -43,7 +43,7 @@ headers = run_command('find', 'src/CZ', '-type', 'f', '-name', '*.h', check : fa
 
 # Public and private API headers
 header_dirs = [
-    ['src/CZ', 'CZ'],
+    ['src/CZ/Core', 'CZ/Core'],
     ['src/CZ/Events', 'CZ/Events'],
     ['src/CZ/Utils', 'CZ/Utils']
 ]

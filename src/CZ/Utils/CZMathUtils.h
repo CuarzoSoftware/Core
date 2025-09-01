@@ -1,7 +1,7 @@
 #ifndef CZMATHUTILS_H
 #define CZMATHUTILS_H
 
-#include <CZ/Cuarzo.h>
+#include <CZ/Core/Cuarzo.h>
 #include <cassert>
 #include <type_traits>
 

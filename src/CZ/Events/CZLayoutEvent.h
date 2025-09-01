@@ -2,8 +2,8 @@
 #define CZ_CZLAYOUTEVENT_H
 
 #include <CZ/Events/CZEvent.h>
-#include <CZ/CZLayoutChange.h>
-#include <CZ/CZBitset.h>
+#include <CZ/Core/CZLayoutChange.h>
+#include <CZ/Core/CZBitset.h>
 
 class CZ::CZLayoutEvent : public CZEvent
 {

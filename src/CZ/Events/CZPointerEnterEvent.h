@@ -2,7 +2,7 @@
 #define CZ_CZPOINTERENTEREVENT_H
 
 #include <CZ/Events/CZInputEvent.h>
-#include <CZ/CZTime.h>
+#include <CZ/Core/CZTime.h>
 #include <CZ/skia/core/SkPoint.h>
 
 class CZ::CZPointerEnterEvent : public CZInputEvent

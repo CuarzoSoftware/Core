@@ -1,7 +1,7 @@
 #ifndef CZ_CZSETUTILS_H
 #define CZ_CZSETUTILS_H
 
-#include <CZ/Cuarzo.h>
+#include <CZ/Core/Cuarzo.h>
 
 class CZ::CZSetUtils
 {
