@@ -31,7 +31,8 @@ add_project_arguments([
 cpp             = meson.get_compiler('cpp')
 pkg             = import('pkgconfig')
 deps = [
-    dependency('cz-skia')
+    dependency('cz-skia'),
+    dependency('xkbcommon')
 ]
 
 # -------------- SOURCES --------------

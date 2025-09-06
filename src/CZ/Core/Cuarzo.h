@@ -21,6 +21,7 @@ namespace CZ
     class CZTimer;
     class CZAnimation;
     class CZSafeEventQueue;
+    class CZKeymap;
     class CZWeakUtils;
     template <class T> class CZWeak;
     template <class T> class CZBitset;
