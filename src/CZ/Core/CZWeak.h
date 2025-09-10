@@ -1,6 +1,7 @@
 #ifndef CZWEAK_H
 #define CZWEAK_H
 
+#include <CZ/Core/CZLockGuard.h>
 #include <CZ/Core/Cuarzo.h>
 #include <functional>
 
@@ -54,7 +55,6 @@ public:
     ~CZWeak() noexcept
     {
         clear();
-
         if (m_onDestroyCallback)
             delete m_onDestroyCallback;
     }

@@ -1,6 +1,7 @@
 #include <CZ/Core/CZCore.h>
 #include <CZ/Core/CZTimer.h>
 #include <CZ/Core/CZAnimation.h>
+#include <CZ/Core/CZLockGuard.h>
 #include <CZ/Events/CZEvent.h>
 
 using namespace CZ;

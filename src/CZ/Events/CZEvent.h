@@ -22,6 +22,7 @@ public:
 
         Destroy,
         Close,
+        Presentation,
 
         Input_First,
         Pointer_First = Input_First,
@@ -68,6 +69,8 @@ public:
         Layout,
 
         Vibrancy,
+
+        /* Louvre */
 
         LSurfaceCommit,
         LSurfaceUnlock,

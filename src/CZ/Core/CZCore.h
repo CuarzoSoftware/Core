@@ -20,7 +20,7 @@ public:
     /// Sent immediately, true if accepted, false if ignored
     bool sendEvent(const CZEvent &event, CZObject &object) noexcept;
 
-    /// Enqueued and sent later
+    /// Enqueued and sent later (thread-safe)
     void postEvent(const CZEvent &event, CZObject &object) noexcept;
 
     void updateAnimations() noexcept;

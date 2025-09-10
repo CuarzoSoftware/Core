@@ -1,6 +1,7 @@
 #ifndef CZ_CZSAFEEVENTQUEUE_H
 #define CZ_CZSAFEEVENTQUEUE_H
 
+#include <CZ/Core/CZLockGuard.h>
 #include <CZ/Core/CZObject.h>
 #include <CZ/Core/CZWeak.h>
 #include <CZ/Events/CZEvent.h>

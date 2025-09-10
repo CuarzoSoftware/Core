@@ -21,6 +21,7 @@ namespace CZ
     class CZTimer;
     class CZAnimation;
     class CZSafeEventQueue;
+    class CZLockGuard;
     class CZKeymap;
     class CZWeakUtils;
     template <class T> class CZWeak;
@@ -30,6 +31,8 @@ namespace CZ
     class CZListener;
     template<typename...Args> class CZListenerTemplate;
     class CZLogger;
+
+    struct CZPresentationTime;
 
     class CZSharedMemory;
     class CZRegionUtils;
@@ -43,7 +46,9 @@ namespace CZ
     class CZCloseEvent;
     class CZDestroyEvent;
     class CZLayoutEvent;
-    class CZInputEvent;    
+    class CZInputEvent;
+
+    class CZPresentationEvent;
 
     class CZPointerEnterEvent;
     class CZPointerMoveEvent;
