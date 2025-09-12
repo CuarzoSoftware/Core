@@ -81,6 +81,17 @@ public:
         return *this;
     }
 
+    /// Equality operator
+    bool operator==(const CZWeak<T> &other) const noexcept
+    {
+        return m_object == other.m_object;
+    }
+
+    /// Ordering operator
+    bool operator<(const CZWeak<T> &other) const noexcept {
+        return m_object < other.m_object;
+    }
+
     /**
      * @brief Gets a pointer to the CZObject or `nullptr` if not set or the object has been destroyed.
      *
@@ -203,5 +214,17 @@ private:
     UInt64 m_index { 0 };
     OnDestroyCallback *m_onDestroyCallback { nullptr };
 };
+
+namespace std // Hash specialization
+{
+    template <class T>
+    struct hash<CZ::CZWeak<T>>
+    {
+        std::size_t operator()(const CZ::CZWeak<T> &w) const noexcept
+        {
+            return std::hash<T*>()(w.get());
+        }
+    };
+}
 
 #endif
