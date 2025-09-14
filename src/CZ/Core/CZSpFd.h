@@ -58,6 +58,9 @@ namespace CZ
             return *this;
         }
 
+        bool operator==(const CZSpFd& other) const noexcept { return m_fd == other.m_fd; }
+        bool operator<(const CZSpFd& other) const noexcept { return m_fd < other.m_fd; }
+
         /**
          * @brief Get the stored file descriptor.
          *
@@ -129,6 +132,18 @@ namespace CZ
 
     private:
         int m_fd;
+    };
+}
+
+namespace std
+{
+    template<>
+    struct hash<CZ::CZSpFd>
+    {
+        size_t operator()(const CZ::CZSpFd& fd) const noexcept
+        {
+            return std::hash<int>()(fd.get());
+        }
     };
 }
 
