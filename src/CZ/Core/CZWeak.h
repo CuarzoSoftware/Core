@@ -81,14 +81,8 @@ public:
         return *this;
     }
 
-    /// Equality operator
-    bool operator==(const CZWeak<T> &other) const noexcept
-    {
-        return m_object == other.m_object;
-    }
-
-    /// Ordering operator
-    bool operator<(const CZWeak<T> &other) const noexcept {
+    /// Ordering operator (CZWeak vs CZWeak)
+    bool operator<(const CZWeak<T>& other) const noexcept {
         return m_object < other.m_object;
     }
 

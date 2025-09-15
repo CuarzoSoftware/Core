@@ -74,4 +74,5 @@ pkg.generate(
     name: 'cz-core',
     description: 'Cuarzo core C++ library.',
     version: meson.project_version(),
+    subdirs: ['CZ/', 'CZ/Core', 'CZ/Events', 'CZ/Utils'],
     requires: [])
