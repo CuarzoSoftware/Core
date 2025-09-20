@@ -26,7 +26,7 @@ std::shared_ptr<CZBooleanEventSource> CZBooleanEventSource::Make(bool enabled, c
     auto instance { std::shared_ptr<CZBooleanEventSource>(new CZBooleanEventSource(enabled, callback)) };
     auto *ptr { instance.get() };
 
-    instance->m_source = CZEventSource::Make(fd, EPOLLIN, [ptr](int, UInt32) {
+    instance->m_source = CZEventSource::Make(fd, EPOLLIN, CZOwn::Own, [ptr](int, UInt32) {
         ptr->setState(false);
         if (ptr->m_callback)
             ptr->m_callback(ptr);
@@ -35,7 +35,6 @@ std::shared_ptr<CZBooleanEventSource> CZBooleanEventSource::Make(bool enabled, c
     if (!instance->m_source)
     {
         CZLog(CZError, CZLN, "Failed to create CZEventSource");
-        close(fd);
         return {};
     }
 
@@ -57,11 +56,4 @@ void CZBooleanEventSource::setState(bool enabled) noexcept
         eventfd_read(m_source->fd(), &value);
     }
 }
-
-CZBooleanEventSource::~CZBooleanEventSource() noexcept
-{
-    if (m_source)
-        close(m_source->fd());
-}
-
 

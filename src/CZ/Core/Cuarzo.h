@@ -33,6 +33,7 @@ namespace CZ
     class CZLogger;
 
     struct CZPresentationTime;
+    struct CZRRect;
 
     class CZSharedMemory;
     class CZRegionUtils;

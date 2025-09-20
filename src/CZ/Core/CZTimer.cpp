@@ -67,7 +67,7 @@ CZTimer::CZTimer(bool oneShoot, const Callback &callback, UInt64 timeoutMs) noex
 
 void CZTimer::init() noexcept
 {
-    m_source = CZEventSource::Make(timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC), EPOLLIN, [this](int fd, UInt32) {
+    m_source = CZEventSource::Make(timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC), EPOLLIN, CZOwn::Own, [this](int fd, UInt32) {
         UInt64 expirations;
         assert(read(fd, &expirations, sizeof(expirations)) == sizeof(expirations));
 

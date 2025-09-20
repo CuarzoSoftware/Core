@@ -41,11 +41,6 @@ public:
      */
     void setState(bool enabled) noexcept;
 
-    /**
-     * @brief Destructor for AKBooleanEventSource.
-     */
-    ~CZBooleanEventSource() noexcept;
-
 private:
     CZBooleanEventSource(bool enabled, const Callback &callback) noexcept :
         m_callback(callback), m_state(enabled) {}
