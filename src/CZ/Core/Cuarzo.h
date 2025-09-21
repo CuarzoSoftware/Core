@@ -13,6 +13,7 @@
 namespace CZ
 {
     class CZCore;
+    class CZObjectBase;
     class CZObject;
     class CZTime;
     class CZInputDevice;

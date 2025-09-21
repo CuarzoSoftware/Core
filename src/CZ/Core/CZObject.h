@@ -5,12 +5,19 @@
 #include <unordered_map>
 #include <list>
 
+class CZ::CZObjectBase
+{
+public:
+    CZObjectBase() noexcept = default;
+    virtual ~CZObjectBase() noexcept = default;
+};
+
 /**
  * @brief Base class for objects.
  *
  * @see CZWeak
  */
-class CZ::CZObject
+class CZ::CZObject : public CZObjectBase
 {
 public:
     CZ_DISABLE_COPY(CZObject)
@@ -30,7 +37,7 @@ public:
     /**
      * @brief Destructor of the CZObject class.
      */
-    virtual ~CZObject() noexcept;
+    ~CZObject() noexcept;
 
 protected:
 
