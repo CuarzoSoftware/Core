@@ -10,7 +10,8 @@ class CZ::CZPointerEnterEvent : public CZInputEvent
 public:
     CZ_EVENT_DECLARE_COPY
     CZPointerEnterEvent() noexcept : CZInputEvent(Type::PointerEnter) {};
-    mutable SkPoint localPos {};
+    // Can be local or global depending on the context
+    mutable SkPoint pos {};
 };
 
 #endif // CZ_CZPOINTERENTEREVENT_H

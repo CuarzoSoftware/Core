@@ -2,6 +2,7 @@
 #include <CZ/Core/CZTimer.h>
 #include <CZ/Core/CZAnimation.h>
 #include <CZ/Core/CZLockGuard.h>
+#include <CZ/Core/CZKeymap.h>
 #include <CZ/Events/CZEvent.h>
 
 using namespace CZ;
@@ -46,6 +47,9 @@ int CZCore::dispatch(int msTimeout) noexcept
         source->m_callback(source->fd(), m_epollEvents[i].events);
     }
 
+    CZSafeEventQueue tmp { std::move(m_eventQueue) };
+    tmp.dispatch();
+
     return ret;
 }
 
@@ -66,8 +70,9 @@ bool CZCore::sendEvent(const CZEvent &event, CZObject &object) noexcept
     return object.event(event);
 }
 
-void CZCore::postEvent(const CZEvent &event, CZObject &object) noexcept
+void CZCore::postEvent(std::shared_ptr<CZEvent> event, CZObject &object) noexcept
 {
+    if (!event) return;
     unlockLoop();
     m_eventQueue.addEvent(event, object);
 }
@@ -75,6 +80,20 @@ void CZCore::postEvent(const CZEvent &event, CZObject &object) noexcept
 CZCore::CZCore() noexcept
 {
     m_epollFd = epoll_create1(EPOLL_CLOEXEC);
+
+    auto keymap { CZKeymap::MakeServer({}) };
+
+    if (!keymap)
+    {
+        unsetenv("XKB_DEFAULT_RULES");
+        unsetenv("XKB_DEFAULT_MODEL");
+        unsetenv("XKB_DEFAULT_LAYOUT");
+        unsetenv("XKB_DEFAULT_VARIANT");
+        unsetenv("XKB_DEFAULT_OPTIONS");
+        keymap = CZKeymap::MakeServer({});
+    }
+
+    setKeymap(keymap);
 }
 
 CZCore::~CZCore() noexcept
@@ -197,4 +216,13 @@ void CZCore::setAutoUpdateAnimations(bool autoUpdate) noexcept
 
     if (autoUpdate)
         m_animationsTimer->start(8);
+}
+
+void CZCore::setKeymap(std::shared_ptr<CZKeymap> keymap) noexcept
+{
+    if (keymap == m_keymap)
+        return;
+
+    m_keymap = keymap;
+    onKeymapChanged.notify();
 }

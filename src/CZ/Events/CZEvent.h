@@ -3,11 +3,12 @@
 
 #include <CZ/Core/Cuarzo.h>
 #include <CZ/Core/CZTime.h>
+#include <memory>
 #include <type_traits>
 
 #define CZ_GET_CLASS_TYPE(x) std::remove_cv_t<std::remove_reference_t<decltype(*(x))>>
 // Used to override copy() in a subclass
-#define CZ_EVENT_DECLARE_COPY CZEvent *copy() const noexcept override { return new CZ_GET_CLASS_TYPE(this)(*this); }
+#define CZ_EVENT_DECLARE_COPY std::shared_ptr<CZEvent> copy() const noexcept override { return std::make_shared<CZ_GET_CLASS_TYPE(this)>(*this); }
 
 /**
  * @brief Base class for events.
@@ -114,7 +115,7 @@ public:
      *
      * @note The returned event must be deleted when no longer used.
      */
-    virtual CZEvent *copy() const noexcept = 0;
+    virtual std::shared_ptr<CZEvent> copy() const noexcept = 0;
 
     bool isAccepted() const noexcept { return m_isAccepted; }
     void accept() const noexcept { m_isAccepted = true; }

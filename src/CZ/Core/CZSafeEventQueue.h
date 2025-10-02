@@ -66,7 +66,7 @@ public:
      * @param event The event to be added.
      * @param object The target object associated with the event.
      */
-    void addEvent(const CZEvent &event, CZObject &object) noexcept;
+    void addEvent(std::shared_ptr<CZEvent> event, CZObject &object) noexcept;
 
     /**
      * @brief Dispatches events in the queue.
@@ -82,7 +82,7 @@ private:
     struct SafeEvent
     {
         CZWeak<CZObject> object;
-        std::unique_ptr<CZEvent> event;
+        std::shared_ptr<CZEvent> event;
     };
 
     std::queue<SafeEvent> m_queue;

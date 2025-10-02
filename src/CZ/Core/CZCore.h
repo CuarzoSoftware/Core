@@ -21,17 +21,22 @@ public:
     bool sendEvent(const CZEvent &event, CZObject &object) noexcept;
 
     /// Enqueued and sent later (thread-safe)
-    void postEvent(const CZEvent &event, CZObject &object) noexcept;
+    void postEvent(std::shared_ptr<CZEvent> event, CZObject &object) noexcept;
 
     void updateAnimations() noexcept;
     bool autoUpdateAnimations() const noexcept { return m_autoUpdateAnimations; };
     void setAutoUpdateAnimations(bool autoUpdate) noexcept;
+
+    // nullptr by default (assigned by Louvre/Marco)
+    std::shared_ptr<CZKeymap> keymap() const noexcept { return m_keymap; }
+    CZSignal<> onKeymapChanged;
 
     ~CZCore() noexcept;
 private:
     friend class CZEventSource;
     friend class CZAnimation;
     friend class LCompositor;
+    friend class LKeyboard;
 
     enum class Owner
     {
@@ -43,6 +48,7 @@ private:
     CZCore() noexcept;
     void init() noexcept;
     void updateEventSources() noexcept;
+    void setKeymap(std::shared_ptr<CZKeymap> keymap) noexcept;
     int m_epollFd;
     std::vector<epoll_event> m_epollEvents;
     std::vector<std::shared_ptr<CZEventSource>> m_currentEventSources;
@@ -55,6 +61,8 @@ private:
     std::unique_ptr<CZTimer> m_animationsTimer;
     bool m_animationsChanged { false };
     bool m_autoUpdateAnimations { true };
+
+    std::shared_ptr<CZKeymap> m_keymap;
 };
 
 #endif // CZCORE_H

@@ -9,7 +9,8 @@ class CZ::CZPointerMoveEvent : public CZInputEvent
 public:
     CZ_EVENT_DECLARE_COPY
     CZPointerMoveEvent() noexcept : CZInputEvent(Type::PointerMove) {}
-    mutable SkPoint localPos {};
+    // Can be local or global depending on the context
+    mutable SkPoint pos {};
     SkPoint delta {};
     SkPoint deltaUnaccelerated {};
 };

@@ -5,9 +5,10 @@
 
 using namespace CZ;
 
-void CZSafeEventQueue::addEvent(const CZEvent &event, CZObject &object) noexcept
+void CZSafeEventQueue::addEvent(std::shared_ptr<CZEvent> event, CZObject &object) noexcept
 {
-    m_queue.emplace(CZWeak<CZObject>(&object), std::unique_ptr<CZEvent>(event.copy()));
+    if (!event) return;
+    m_queue.emplace(CZWeak<CZObject>(&object), event);
 }
 
 void CZSafeEventQueue::dispatch() noexcept
