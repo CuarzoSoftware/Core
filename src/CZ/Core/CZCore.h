@@ -27,7 +27,7 @@ public:
     bool autoUpdateAnimations() const noexcept { return m_autoUpdateAnimations; };
     void setAutoUpdateAnimations(bool autoUpdate) noexcept;
 
-    // nullptr by default (assigned by Louvre/Marco)
+    void setKeymap(std::shared_ptr<CZKeymap> keymap) noexcept;
     std::shared_ptr<CZKeymap> keymap() const noexcept { return m_keymap; }
     CZSignal<> onKeymapChanged;
 
@@ -48,7 +48,6 @@ private:
     CZCore() noexcept;
     void init() noexcept;
     void updateEventSources() noexcept;
-    void setKeymap(std::shared_ptr<CZKeymap> keymap) noexcept;
     int m_epollFd;
     std::vector<epoll_event> m_epollEvents;
     std::vector<std::shared_ptr<CZEventSource>> m_currentEventSources;

@@ -2,6 +2,7 @@
 #define CZ_CURSORSHAPE_H
 
 #include <CZ/Core/Cuarzo.h>
+#include <string>
 
 namespace CZ
 {
@@ -120,6 +121,8 @@ namespace CZ
         /// Resizing: the item can be moved or resized in any direction. (non-CSS value)
         MoveOrResize = 36,
     };
+
+    const std::string &CZCursorShapeString(CZCursorShape shape) noexcept;
 }
 
 #endif // CZ_CURSORSHAPE_H
