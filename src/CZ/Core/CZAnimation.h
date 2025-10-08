@@ -6,17 +6,15 @@
 #include <functional>
 
 /**
- * @brief Time-based animations.
+ * @brief Time-based animation utility.
  *
- * This class can be used for animating object parameters such as positions, color, opacity, etc. It has a fixed duration
- * in milliseconds, and is synchronized with each initialized output's render loop.\n
- * After started, the `onUpdate()` callback is triggered before each LOutput::paintGL() call, allowing you to
- * access the value() property, which is a 64-bit floating-point number linearly interpolated from 0.0 to 1.0,
- * indicating the completion percentage of the animation.
+ * This class provides a mechanism for animating object properties such as position, color, opacity, and more.
+ * It runs for a fixed duration, specified in milliseconds.
  *
- * @note It is essential to manually invoke LOutput::repaint() on the outputs you are animating; otherwise, the `onUpdate()` callback may not be invoked.
+ * Once started, the `onUpdate()` callback is invoked periodically, allowing access to the `value()` property,
+ * a 64-bit floating-point number linearly interpolated from 0.0 to 1.0 representing the animation's progress.
  *
- * After the animation finishes, the `onFinish()` callback is triggered, and the value() property has a value of 1.0.\n
+ * When the animation completes, the `onFinish()` callback is triggered. At that point, `value()` will return 1.0.
  */
 class CZ::CZAnimation : public CZObject
 {
@@ -100,10 +98,7 @@ public:
      *
      * @return The duration of the animation in milliseconds.
      */
-    UInt32 duration() const noexcept
-    {
-        return m_duration;
-    }
+    UInt32 duration() const noexcept { return m_duration; }
 
     /**
      * @brief Returns a number linearly interpolated from 0.0 to 1.0.
@@ -113,10 +108,7 @@ public:
      *
      * @return The interpolated completion value ranging from 0.0 to 1.0.
      */
-    Float64 value() const noexcept
-    {
-        return m_value;
-    }
+    Float64 value() const noexcept { return m_value; }
 
     /**
      * @brief Starts the animation.
@@ -138,10 +130,7 @@ public:
      *
      * @return `true` if running, `false` otherwise.
      */
-    bool running() const noexcept
-    {
-        return m_running;
-    }
+    bool running() const noexcept { return m_running; }
 
 private:
     friend class CZCore;

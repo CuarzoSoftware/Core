@@ -96,6 +96,9 @@ public:
         m_flags &= ~flags;
     }
 
+    /**
+     * @brief Checks if no flags are set.
+     */
     constexpr bool isEmpty() const noexcept
     {
         return m_flags == 0;
@@ -140,9 +143,7 @@ public:
     }
 
     /**
-     * @brief Set new flags in the bitfield
-     *
-     * Replaces the current set of flags in the bitfield with the specified flags.
+     * @brief Replaces the current set of flags in the bitfield with the specified flags.
      *
      * @param flags The new flag or combination of flags to be set
      */
@@ -152,7 +153,7 @@ public:
     }
 
     /**
-     * @brief Set or unset a specific flag in the bitfield
+     * @brief Set or unset a one or more flags in the bitfield
      *
      * Modifies the specified flag (or flags) in the bitfield. If `enable` is `true`, the flag is set, otherwise, it is removed.
      *

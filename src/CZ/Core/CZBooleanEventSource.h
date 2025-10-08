@@ -23,11 +23,11 @@ public:
     using Callback = std::function<void(CZBooleanEventSource *source)>;
 
     /**
-     * @brief Creates an AKBooleanEventSource.
+     * @brief Creates an CZBooleanEventSource.
      *
      * @param callback The callback function to be triggered (optional).
      * @param enabled Initial state of the event source.
-     * @return A shared pointer to the created AKBooleanEventSource, or `nullptr` on failure.
+     * @return A shared pointer to the created CZBooleanEventSource, or `nullptr` on failure.
      */
     static std::shared_ptr<CZBooleanEventSource> Make(bool enabled, const Callback &callback) noexcept;
 
