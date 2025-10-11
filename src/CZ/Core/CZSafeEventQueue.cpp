@@ -1,5 +1,5 @@
 #include <CZ/Core/CZSafeEventQueue.h>
-#include <CZ/Events/CZEvent.h>
+#include <CZ/Core/Events/CZEvent.h>
 #include <CZ/Core/CZCore.h>
 #include <CZ/Core/CZLog.h>
 

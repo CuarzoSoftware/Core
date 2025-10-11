@@ -4,7 +4,7 @@
 #include <CZ/Core/CZLockGuard.h>
 #include <CZ/Core/CZObject.h>
 #include <CZ/Core/CZWeak.h>
-#include <CZ/Events/CZEvent.h>
+#include <CZ/Core/Events/CZEvent.h>
 #include <memory>
 #include <queue>
 

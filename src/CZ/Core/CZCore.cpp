@@ -3,7 +3,7 @@
 #include <CZ/Core/CZAnimation.h>
 #include <CZ/Core/CZLockGuard.h>
 #include <CZ/Core/CZKeymap.h>
-#include <CZ/Events/CZEvent.h>
+#include <CZ/Core/Events/CZEvent.h>
 
 using namespace CZ;
 
