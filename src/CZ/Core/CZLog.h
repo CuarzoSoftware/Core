@@ -3,8 +3,8 @@
 
 #include <CZ/Core/CZLogger.h>
 
-#define CZLog CZLogGet()
+#define CZLog CZCoreLoggerGet()
 
-const CZ::CZLogger &CZLogGet() noexcept;
+const CZ::CZLogger &CZCoreLoggerGet() noexcept;
 
 #endif // CZ_CZLOG_H

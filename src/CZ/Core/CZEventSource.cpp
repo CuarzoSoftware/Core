@@ -47,6 +47,7 @@ std::shared_ptr<CZEventSource> CZEventSource::Make(int fd, UInt32 events, CZOwn 
         return {};
     }
 
+    CZLog(CZDebug, CZLN, "Event source added fd: {}", fd);
     core->m_pendingEventSources.emplace_back(eventSource);
     return eventSource;
 }

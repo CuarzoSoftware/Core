@@ -6,15 +6,13 @@
 
 using namespace CZ;
 
-static CZLogger log { CZLog.newWithContext("CZKeymap") };
-
 std::shared_ptr<CZKeymap> CZKeymap::MakeServer(const xkb_rule_names &names) noexcept
 {
     auto *context { xkb_context_new(XKB_CONTEXT_NO_FLAGS) };
 
     if (!context)
     {
-        log(CZError, CZLN, "Failed to create xkb_context");
+        CZLog(CZError, CZLN, "Failed to create xkb_context");
         return {};
     }
 
@@ -22,7 +20,7 @@ std::shared_ptr<CZKeymap> CZKeymap::MakeServer(const xkb_rule_names &names) noex
 
     if (!keymap)
     {
-        log(CZError, CZLN, "Failed to create xkb_keymap");
+        CZLog(CZError, CZLN, "Failed to create xkb_keymap");
         xkb_context_unref(context);
         return {};
     }
@@ -31,7 +29,7 @@ std::shared_ptr<CZKeymap> CZKeymap::MakeServer(const xkb_rule_names &names) noex
 
     if (!state)
     {
-        log(CZError, CZLN, "Failed to create xkb_state");
+        CZLog(CZError, CZLN, "Failed to create xkb_state");
         xkb_keymap_unref(keymap);
         xkb_context_unref(context);
         return {};
@@ -41,7 +39,7 @@ std::shared_ptr<CZKeymap> CZKeymap::MakeServer(const xkb_rule_names &names) noex
 
     if (!str)
     {
-        log(CZError, CZLN, "Failed to get xkb_keymap as string");
+        CZLog(CZError, CZLN, "Failed to get xkb_keymap as string");
         xkb_state_unref(state);
         xkb_keymap_unref(keymap);
         xkb_context_unref(context);
@@ -53,7 +51,7 @@ std::shared_ptr<CZKeymap> CZKeymap::MakeServer(const xkb_rule_names &names) noex
 
     if (!shm)
     {
-        log(CZError, CZLN, "Failed to create shm");
+        CZLog(CZError, CZLN, "Failed to create shm");
         free(str);
         xkb_state_unref(state);
         xkb_keymap_unref(keymap);
@@ -67,7 +65,7 @@ std::shared_ptr<CZKeymap> CZKeymap::MakeServer(const xkb_rule_names &names) noex
 
     if (roFd < 0)
     {
-        log(CZError, CZLN, "Failed to create read only fd");
+        CZLog(CZError, CZLN, "Failed to create read only fd");
         free(str);
         xkb_state_unref(state);
         xkb_keymap_unref(keymap);
@@ -84,7 +82,7 @@ std::shared_ptr<CZ::CZKeymap> CZKeymap::MakeClient(int fd, size_t size) noexcept
 
     if (map == MAP_FAILED)
     {
-        log(CZError, CZLN, "Failed to map server keymap");
+        CZLog(CZError, CZLN, "Failed to map server keymap");
         return {};
     }
 
@@ -92,7 +90,7 @@ std::shared_ptr<CZ::CZKeymap> CZKeymap::MakeClient(int fd, size_t size) noexcept
 
     if (!context)
     {
-        log(CZError, CZLN, "Failed to create xkb_context");
+        CZLog(CZError, CZLN, "Failed to create xkb_context");
         munmap((void*)map, size);
         return {};
     }
@@ -102,7 +100,7 @@ std::shared_ptr<CZ::CZKeymap> CZKeymap::MakeClient(int fd, size_t size) noexcept
 
     if (!keymap)
     {
-        log(CZError, CZLN, "Failed to create xkb_keymap");
+        CZLog(CZError, CZLN, "Failed to create xkb_keymap");
         xkb_context_unref(context);
         return {};
     }
@@ -111,7 +109,7 @@ std::shared_ptr<CZ::CZKeymap> CZKeymap::MakeClient(int fd, size_t size) noexcept
 
     if (!state)
     {
-        log(CZError, CZLN, "Failed to create xkb_state");
+        CZLog(CZError, CZLN, "Failed to create xkb_state");
         xkb_keymap_unref(keymap);
         xkb_context_unref(context);
         return {};
@@ -167,7 +165,7 @@ void CZKeymap::feed(const CZKeyboardKeyEvent &e) noexcept
 
         if (!res.second)
         {
-            log(CZWarning, CZLN, "Key code {} already pressed. Ignoring event...", e.code);
+            CZLog(CZWarning, CZLN, "Key code {} already pressed. Ignoring event...", e.code);
             return;
         }
 
@@ -205,7 +203,7 @@ void CZKeymap::feed(const CZKeyboardKeyEvent &e) noexcept
 
         if (it == m_pressedKeys.end())
         {
-            log(CZWarning, CZLN, "Key code {} already released. Ignoring event...", e.code);
+            CZLog(CZWarning, CZLN, "Key code {} already released. Ignoring event...", e.code);
             return;
         }
 
@@ -225,7 +223,7 @@ void CZKeymap::feed(const CZKeyboardKeyEvent &e) noexcept
     m_modifiers.locked = xkb_state_serialize_mods(state(), XKB_STATE_MODS_LOCKED);
     m_modifiers.group = xkb_state_serialize_layout(state(), XKB_STATE_LAYOUT_EFFECTIVE);
 
-    log(CZTrace, "Key Code: {}, UTF8: {}, State: {}", e.code, e.utf8, e.isPressed ? "Pressed" : "Released");
+    CZLog(CZTrace, "Key Code: {}, UTF8: {}, State: {}", e.code, e.utf8, e.isPressed ? "Pressed" : "Released");
 }
 
 void CZKeymap::setRepeatInfo(Int32 delayMs, Int32 rateMs) noexcept
@@ -293,7 +291,7 @@ void CZKeymap::loadComposeTable(const char *locale) noexcept
         m_composeTable = nullptr;
         goto fail;
     }
-    log(CZInfo, CZLN, "Using locale {}", locale);
+    CZLog(CZInfo, CZLN, "Using locale {}", locale);
     return;
 fail:
     // Try with uppercase
@@ -304,7 +302,7 @@ fail:
 
         if (localeNormal != localeUpper)
         {
-            log(CZWarning, CZLN, "Failed to create compose table from locale {}. Trying with {}", locale, localeUpper.c_str());
+            CZLog(CZWarning, CZLN, "Failed to create compose table from locale {}. Trying with {}", locale, localeUpper.c_str());
             return loadComposeTable(localeUpper.c_str());
         }
     }
@@ -312,7 +310,7 @@ fail:
     // Fallback
     if (strcmp(locale, "C") != 0)
     {
-        log(CZWarning, CZLN, "Failed to create compose table from locale {}. Falling back to locale C", locale);
+        CZLog(CZWarning, CZLN, "Failed to create compose table from locale {}. Falling back to locale C", locale);
         loadComposeTable("C");
     }
 }

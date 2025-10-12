@@ -58,9 +58,6 @@ public:
         Touch_Last = TouchCancel,
         Input_Last = Touch_Last,
 
-        InputDevicePlugged,
-        InputDeviceUnplugged,
-
         WindowState,
 
         Render,

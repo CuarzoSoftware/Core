@@ -1,3 +1,4 @@
+#include <CZ/Core/CZLog.h>
 #include <CZ/Core/CZCore.h>
 #include <CZ/Core/CZTimer.h>
 #include <CZ/Core/CZAnimation.h>
@@ -79,6 +80,8 @@ void CZCore::postEvent(std::shared_ptr<CZEvent> event, CZObject &object) noexcep
 
 CZCore::CZCore() noexcept
 {
+    CZLog(CZInfo, CZLN, "CZCore created");
+
     m_epollFd = epoll_create1(EPOLL_CLOEXEC);
 
     auto keymap { CZKeymap::MakeServer({}) };
@@ -107,6 +110,8 @@ CZCore::~CZCore() noexcept
     }
 
     close(m_epollFd);
+
+    CZLog(CZInfo, CZLN, "CZCore destroyed");
 }
 
 void CZCore::init() noexcept
@@ -129,6 +134,7 @@ void CZCore::updateEventSources() noexcept
     {
         if (m_currentEventSources[i].use_count() == 1)
         {
+            CZLog(CZDebug, CZLN, "Event source destroyed fd: {}", m_currentEventSources[i]->fd());
             epoll_ctl(m_epollFd, EPOLL_CTL_DEL, m_currentEventSources[i]->fd(), NULL);
             m_currentEventSources[i] = m_currentEventSources.back();
             m_currentEventSources.pop_back();
