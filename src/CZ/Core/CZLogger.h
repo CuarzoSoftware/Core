@@ -30,10 +30,8 @@ class CZ::CZLogger
 public:
     CZLogger(const std::string &ns = "", const char *env = nullptr) noexcept;
 
-    /// Namespace e.g. "Louvre" => Louvre Warning: ...
     const std::string &ns() const noexcept { return m_ns; }
 
-    /// Context e.g. "Object 1" => Namespace Warning: [Object 1] ...
     const std::string &ctx() const noexcept { return m_ctx; }
 
     CZLogLevel level() const noexcept { return *m_lvl; }
