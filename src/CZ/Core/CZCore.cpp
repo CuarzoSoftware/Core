@@ -209,19 +209,19 @@ retry:
         }
     }
 
-    if (anyRunning && m_autoUpdateAnimations)
-        m_animationsTimer->start(8);
+    if (anyRunning && m_animationInteval > 0)
+        m_animationsTimer->start(m_animationInteval);
 }
 
-void CZCore::setAutoUpdateAnimations(bool autoUpdate) noexcept
+void CZCore::setAnimationInterval(UInt64 interval) noexcept
 {
-    if (autoUpdate == m_autoUpdateAnimations)
+    if (interval == m_animationInteval)
         return;
 
-    m_autoUpdateAnimations = autoUpdate;
+    m_animationInteval = interval;
 
-    if (autoUpdate)
-        m_animationsTimer->start(8);
+    if (m_animationInteval > 0)
+        m_animationsTimer->start(m_animationInteval);
 }
 
 void CZCore::setKeymap(std::shared_ptr<CZKeymap> keymap) noexcept
