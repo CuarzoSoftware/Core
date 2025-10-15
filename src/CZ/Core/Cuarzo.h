@@ -21,6 +21,7 @@ namespace CZ
     class CZBooleanEventSource;
     class CZTimer;
     class CZAnimation;
+    class CZEase;
     class CZSafeEventQueue;
     class CZLockGuard;
     class CZKeymap;
