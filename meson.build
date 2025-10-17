@@ -1,5 +1,5 @@
 project(
-    'Core',
+    'cz-core',
     'c','cpp',
     version : run_command('cat', files('VERSION'), check : false).stdout().strip(),
     meson_version: '>= 0.62.0',
@@ -8,12 +8,13 @@ project(
         'buildtype=release',
         'cpp_std=c++20'])
 
+NAME = 'Core'
 VERSION_MAJOR = meson.project_version().split('.')[0]
 VERSION_MINOR = meson.project_version().split('.')[1]
 VERSION_PATCH = meson.project_version().split('.')[2]
 VERSION_BUILD = run_command('cat', './BUILD', check : false).stdout()
 HEADERS_INSTALL_DIR = join_paths(get_option('prefix'), get_option('includedir'))
-CONF_FILE_NAME = 'CZ' + meson.project_name() + 'Version.h'
+CONF_FILE_NAME = 'CZ' + NAME + 'Version.h'
 
 conf = configuration_data()
 conf.set('VERSION_MAJOR', VERSION_MAJOR)
@@ -32,8 +33,11 @@ install_data(
 
 cpp  = meson.get_compiler('cpp')
 pkg  = import('pkgconfig')
+
+cz_skia_dep = dependency('cz-skia', fallback:['cz-skia', 'cz_skia_dep'])
+
 deps = [
-    dependency('cz-skia'),
+    cz_skia_dep,
     dependency('xkbcommon')
 ]
 
@@ -65,6 +69,11 @@ cz_core = library(
     dependencies : deps,
     soversion: VERSION_MAJOR,
     install : true)
+
+cz_core_dep = declare_dependency(
+    dependencies: deps,
+    include_directories : ['src', 'src/CZ'],
+    link_with : cz_core)
 
 pkg.generate(
     cz_core,
