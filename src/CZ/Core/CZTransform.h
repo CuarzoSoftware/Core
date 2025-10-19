@@ -2,6 +2,7 @@
 #define CZTRANSFORM_H
 
 #include <CZ/Core/Cuarzo.h>
+#include <string_view>
 
 namespace CZ
 {
@@ -69,6 +70,31 @@ namespace CZ
         }
 
         return static_cast<CZTransform>(flip | rotation);
+    }
+
+    static inline constexpr std::string_view TransformString(CZTransform transform) noexcept
+    {
+        switch (transform)
+        {
+        case CZTransform::Normal:
+            return "Normal";
+        case CZTransform::Rotated90:
+            return "Rotated90";
+        case CZTransform::Rotated180:
+            return "Rotated180";
+        case CZTransform::Rotated270:
+            return "Rotated270";
+        case CZTransform::Flipped:
+            return "Flipped";
+        case CZTransform::Flipped90:
+            return "Flipped90";
+        case CZTransform::Flipped180:
+            return "Flipped180";
+        case CZTransform::Flipped270:
+            return "Flipped270";
+        default:
+            return "Unknown";
+        }
     }
 }
 #endif // CZTRANSFORM_H
