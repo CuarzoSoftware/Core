@@ -60,6 +60,7 @@ foreach header_dir : header_dirs
     install_headers(header_files, install_dir : join_paths(HEADERS_INSTALL_DIR, header_dir[1]))
     include_paths += include_directories(header_dir[0])
 endforeach
+
 # -------------- LIBRARY --------------
 
 cz_core = library(
@@ -82,3 +83,7 @@ pkg.generate(
     version: meson.project_version(),
     subdirs: ['CZ/', 'CZ/Core', 'CZ/Core/Events', 'CZ/Core/Utils'],
     libraries: deps)
+
+# -------------- TESTS --------------
+
+subdir('src/tests/cz-core-timers')

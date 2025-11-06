@@ -3,6 +3,7 @@
 
 #include <CZ/Core/CZEventSource.h>
 #include <sys/timerfd.h>
+#include <chrono>
 
 /**
  * @brief Timer Event Source.
@@ -38,25 +39,25 @@ public:
      * @param timeoutMs The timeout in milliseconds.
      * @param callback The callback function to be called when the timer event is triggered.
      */
-    static void OneShot(UInt64 timeoutMs, const Callback &callback) noexcept;
+    static void OneShot(UInt32 timeoutMs, const Callback &callback) noexcept;
 
     /**
      * @brief Destroys the CZTimer object without triggering the callback if running.
      */
-    ~CZTimer() noexcept = default;
+    ~CZTimer() noexcept;
 
     /**
      * @brief Starts the timer.
      *
      * Starts the timer with the specified timeout in milliseconds. If the timer
-     * is already running, it will be restarted with the new timeout and the callback
+     * is already running, it will be restarted with the new timeout and the previous callback
      * will not be triggered.
      *
      * @note If no callback was provided, the timer will not start.
      *
      * @param timeoutMs The timeout in milliseconds. Even if passing 0, the callback will be triggered later by the event loop.
      */
-    void start(UInt64 timeoutMs) noexcept;
+    void start(UInt32 timeoutMs) noexcept;
 
     /**
      * @brief Stops the timer.
@@ -92,7 +93,7 @@ public:
      *
      * @return The timeout in milliseconds.
      */
-    UInt64 timeoutMs() const noexcept { return m_timeoutMs; }
+    UInt32 timeoutMs() const noexcept { return m_timeoutMs; }
 
     /**
      * @brief Checks if the timer is running.
@@ -102,12 +103,13 @@ public:
     bool running() const noexcept { return m_running; }
 
 private:
+    friend class CZCore;
     CZTimer(bool oneShoot, const Callback &callback, UInt64 timeoutMs) noexcept;
     void init() noexcept;
-
     Callback m_callback;
-    UInt64 m_timeoutMs { 0 };
-    std::shared_ptr<CZEventSource> m_source;
+    UInt32 m_timeoutMs { 0 };
+    std::chrono::steady_clock::time_point m_beginTime;
+    bool m_processed { false };
     bool m_running { false };
     bool m_oneShoot;
 };

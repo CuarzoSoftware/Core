@@ -34,6 +34,13 @@ public:
      *
      * @return Shared pointer to the CZCore instance.
      */
+    static std::shared_ptr<CZCore> GetOrMake() noexcept;
+
+    /**
+     * @brief Retrieves the singleton instance of CZCore.
+     *
+     * @return Shared pointer to the CZCore instance or nullptr if not created.
+     */
     static std::shared_ptr<CZCore> Get() noexcept;
 
     /**
@@ -126,6 +133,7 @@ public:
 private:
     friend class CZEventSource;
     friend class CZAnimation;
+    friend class CZTimer;
     friend class LCompositor;
     friend class LKeyboard;
 
@@ -137,8 +145,12 @@ private:
     };
 
     CZCore() noexcept;
-    void init() noexcept;
+    bool init() noexcept;
+    bool initKeymap() noexcept;
+    bool initTimersSource() noexcept;
     void updateEventSources() noexcept;
+    void updateTimers() noexcept;
+    void scheduleTimer() noexcept;
     int m_epollFd;
     std::vector<epoll_event> m_epollEvents;
     std::vector<std::shared_ptr<CZEventSource>> m_currentEventSources;
@@ -146,6 +158,10 @@ private:
     std::shared_ptr<CZBooleanEventSource> m_loopUnlocker;
     CZSafeEventQueue m_eventQueue;
     Owner m_owner { Owner::None };
+
+    std::shared_ptr<CZEventSource> m_timersSource;
+    std::vector<CZTimer*> m_timers;
+    bool m_timersChanged { false };
 
     std::vector<CZAnimation*> m_animations;
     std::unique_ptr<CZTimer> m_animationsTimer;

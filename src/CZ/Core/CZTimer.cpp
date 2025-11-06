@@ -1,5 +1,8 @@
+#include <CZ/Core/CZLog.h>
 #include <CZ/Core/CZTimer.h>
 #include <CZ/Core/CZWeak.h>
+#include <CZ/Core/CZCore.h>
+#include <CZ/Core/Utils/CZVectorUtils.h>
 
 using namespace CZ;
 
@@ -10,7 +13,7 @@ CZTimer::CZTimer(const Callback &callback) noexcept :
     init();
 }
 
-void CZTimer::OneShot(UInt64 timeoutMs, const Callback &callback) noexcept
+void CZTimer::OneShot(UInt32 timeoutMs, const Callback &callback) noexcept
 {
     if (!callback)
         return;
@@ -18,25 +21,33 @@ void CZTimer::OneShot(UInt64 timeoutMs, const Callback &callback) noexcept
     new CZTimer(true, callback, timeoutMs);
 }
 
-void CZTimer::start(UInt64 timeoutMs) noexcept
+CZTimer::~CZTimer() noexcept
 {
+    auto core { CZCore::Get() };
+    if (!core) return;
+
+    core->m_timersChanged = true;
+    CZVectorUtils::RemoveOneUnordered(core->m_timers, this);
+}
+
+void CZTimer::start(UInt32 timeoutMs) noexcept
+{
+    auto core { CZCore::Get() };
+
+    if (!core)
+    {
+        CZLog(CZError, CZLN, "CZTimer started without a CZCore");
+        return;
+    }
+
     m_timeoutMs = timeoutMs;
 
     if (!m_callback)
         return;
 
     m_running = true;
-
-    if (timeoutMs == 0)
-    {
-        constexpr itimerspec timeout { {0, 0}, {0, 1} };
-        timerfd_settime(m_source->fd(), 0, &timeout, nullptr);
-    }
-    else
-    {
-        const itimerspec timeout ( {0, 0}, {static_cast<__time_t>(timeoutMs / 1000), static_cast<__syscall_slong_t>((timeoutMs % 1000) * 1000000)} );
-        timerfd_settime(m_source->fd(), 0, &timeout, nullptr);
-    }
+    m_beginTime = std::chrono::steady_clock::now();
+    core->scheduleTimer();
 }
 
 void CZTimer::stop(bool notifyIfRunning) noexcept
@@ -45,8 +56,8 @@ void CZTimer::stop(bool notifyIfRunning) noexcept
         return;
 
     m_running = false;
-    constexpr itimerspec timeout { {0, 0}, {0, 0} };
-    timerfd_settime(m_source->fd(), 0, &timeout, nullptr);
+
+    auto core { CZCore::Get() };
 
     CZWeak<CZTimer> ref { this };
 
@@ -55,6 +66,9 @@ void CZTimer::stop(bool notifyIfRunning) noexcept
 
     if (ref && !m_running && m_oneShoot)
         delete this;
+
+    if (core)
+        core->scheduleTimer();
 }
 
 CZTimer::CZTimer(bool oneShoot, const Callback &callback, UInt64 timeoutMs) noexcept :
@@ -67,23 +81,14 @@ CZTimer::CZTimer(bool oneShoot, const Callback &callback, UInt64 timeoutMs) noex
 
 void CZTimer::init() noexcept
 {
-    m_source = CZEventSource::Make(timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC), EPOLLIN, CZOwn::Own, [this](int fd, UInt32) {
-        UInt64 expirations;
-        assert(read(fd, &expirations, sizeof(expirations)) == sizeof(expirations));
+    auto core { CZCore::Get() };
 
-        constexpr itimerspec timeout { {0, 0}, {0, 0} };
-        timerfd_settime(fd, 0, &timeout, nullptr);
+    if (!core)
+    {
+        CZLog(CZError, CZLN, "CZTimer created without a CZCore");
+        return;
+    }
 
-        const bool wasRunning { m_running };
-        CZWeak<CZTimer> ref { this };
-        m_running = false;
-
-        if (wasRunning && m_callback)
-            m_callback(this);
-
-        if (ref && !m_running && m_oneShoot)
-            delete this;
-    });
-
-    assert("CZTimers must be created after a CZCore" && m_source);
+    core->m_timers.emplace_back(this);
+    core->m_timersChanged = true;
 }
