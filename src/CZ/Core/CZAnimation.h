@@ -3,146 +3,89 @@
 
 #include <CZ/Core/CZObject.h>
 #include <chrono>
-#include <functional>
 
 /**
- * @brief Time-based animation utility.
- *
- * This class provides a mechanism for animating object properties such as position, color, opacity, and more.
- * It runs for a fixed duration, specified in milliseconds.
- *
- * Once started, the `onUpdate()` callback is invoked periodically, allowing access to the `value()` property,
- * a 64-bit floating-point number linearly interpolated from 0.0 to 1.0 representing the animation's progress.
- *
- * When the animation completes, the `onFinish()` callback is triggered. At that point, `value()` will return 1.0.
+ * @brief Base class for animations.
  */
 class CZ::CZAnimation : public CZObject
 {
 public:
-
     /**
-     * Callback function type used to handle the `onUpdate()` and `onFinish()` events.
+     * @brief Callback function type used for `onUpdate()` and `onFinish()` events.
      */
     using Callback = std::function<void(CZAnimation*)>;
 
     /**
-     * @brief Creates a reusable animation.
+     * @brief Destructor.
      *
-     * Creates an animation without starting it immediately.
-     *
-     * @param durationMs The duration of the animation in milliseconds.
-     * @param onUpdate A callback function triggered each time the value() property changes. `nullptr` can be passed if not used.
-     * @param onFinish A callback function triggered once the value() property reaches 1.0. `nullptr` can be passed if not used.
-     */
-    CZAnimation(UInt32 durationMs = 0, const Callback &onUpdate = nullptr, const Callback &onFinish = nullptr) noexcept;
-
-    /**
-     * @brief Destructor for the LAnimation class.
-     *
-     * Destroys an animation object. If the animation is currently running at the
-     * time of destruction, the `onFinish()` callback is invoked immediately before
-     * the object is destroyed.
+     * @note If the animation is destroyed before it finishes, the `onFinish` callback
+     *       will not be invoked.
      */
     ~CZAnimation() noexcept;
 
     /**
-     * @brief Creates and launches a one-time animation with automatic cleanup.
+     * @brief Sets the `onUpdate` callback.
      *
-     * The oneShot() method creates and starts an animation immediately, and it is automatically destroyed once finished.
-     *
-     * @param durationMs The duration of the animation in milliseconds.
-     * @param onUpdate A callback function triggered each time the value() property changes. `nullptr` can be passed if not used.
-     * @param onFinish A callback function triggered once the value() property reaches 1.0. `nullptr` can be passed if not used.
+     * @param onUpdate The callback function to invoke during updates, or `nullptr` to disable it.
      */
-    static void OneShot(UInt32 durationMs, const Callback &onUpdate = nullptr, const Callback &onFinish = nullptr) noexcept;
+    void setOnUpdateCallback(Callback onUpdate) noexcept;
 
     /**
-     * @brief Sets the `onUpdate()` callback handler function.
+     * @brief Sets the `onFinish` callback.
      *
-     * This method allows you to set the callback function that will be called when an update event occurs.
-     *
-     * @param onUpdate A reference to the callback function. Pass `nullptr` to disable the callback.
+     * @param onFinish The callback function to invoke when the animation finishes, or `nullptr` to disable it.
      */
-    void setOnUpdateCallback(const Callback &onUpdate) noexcept;
+    void setOnFinishCallback(Callback onFinish) noexcept;
 
     /**
-     * @brief Sets the `onFinish()` callback handler function.
+     * @brief Returns the current animation value.
      *
-     * This method allows you to set the callback function that will be called when the animaion finishes or stop() is called.
-     *
-     * @param onFinish A reference to the callback function. Pass `nullptr` to disable the callback.
-     */
-    void setOnFinishCallback(const Callback &onFinish) noexcept;
-
-    /**
-     * @brief Sets the duration of the animation in milliseconds.
-     *
-     * Use this method to specify the duration of the animation in milliseconds.
-     *
-     * @note It is not permissible to invoke this method while the animation is in progress, and attempting to do so will yield no results.
-     *
-     * @param durationMs The duration of the animation in milliseconds.
-     */
-    void setDuration(UInt32 durationMs) noexcept
-    {
-        if (m_running)
-            return;
-
-        m_duration = durationMs;
-    }
-
-    /**
-     * @brief Returns the duration of the animation in milliseconds.
-     *
-     * Use this method to retrieve the duration of the animation in milliseconds.
-     *
-     * @return The duration of the animation in milliseconds.
-     */
-    UInt32 duration() const noexcept { return m_duration; }
-
-    /**
-     * @brief Returns a number linearly interpolated from 0.0 to 1.0.
-     *
-     * This method returns a value indicating the percentage of completion of the animation.
-     * The value is linearly interpolated between 0.0 (start of the animation) and 1.0 (end of the animation).
-     *
-     * @return The interpolated completion value ranging from 0.0 to 1.0.
+     * @note The range depends on the specific animation type.
      */
     Float64 value() const noexcept { return m_value; }
 
     /**
+     * @brief Returns whether the animation is currently running.
+     */
+    bool isRunning() const noexcept { return m_isRunning; }
+
+    /**
      * @brief Starts the animation.
      *
-     * If the animation is already running, calling this method a no-op.
+     * @note This has no effect if the animation is already running.
      */
     void start() noexcept;
 
     /**
-     * @brief Halts the animation before its duration is reached.
+     * @brief Stops the animation.
      *
-     * The stop() method can be used to stop the animation before its duration is reached.
-     * If called before the animation finishes, the `onFinish()` callback is triggered immediately, and the value() property is set to 1.0.
+     * @details Stops the animation immediately without invoking the `onFinish`
+     *          callback. The current state is preserved and will remain unchanged
+     *          until `start()` is called again.
      */
-    void stop();
+    void stop() noexcept;
 
     /**
-     * @brief Checks if the animation is currently running.
+     * @brief Returns the time point at which the animation was last started.
      *
-     * @return `true` if running, `false` otherwise.
+     * @note This value is updated when `start()` is called.
      */
-    bool running() const noexcept { return m_running; }
+    std::chrono::steady_clock::time_point startTime() const noexcept { return m_startTime; }
 
+protected:
+    CZAnimation(Callback onUpdate, Callback onFinish, bool oneshot) noexcept;
+    virtual void onStart() noexcept = 0;
+    virtual void onUpdate() noexcept = 0;
+    Float64 m_value { 0.0 };
+    bool m_isRunning { false };
 private:
     friend class CZCore;
     Callback m_onUpdate { nullptr };
-    Float64 m_value { 0.0 };
-    Int64 m_duration;
-    std::chrono::steady_clock::time_point m_beginTime;
-    bool m_running { false };
+    Callback m_onFinish { nullptr };
+    std::chrono::steady_clock::time_point m_startTime;
     bool m_processed { false };
     bool m_pendingDestroy { false };
-    bool m_destroyOnFinish { false };
-    Callback m_onFinish { nullptr };
+    bool m_oneshot { false };
 };
 
 #endif // CZ_CZANIMATION_H

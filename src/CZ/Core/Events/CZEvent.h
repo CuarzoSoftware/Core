@@ -66,6 +66,7 @@ public:
         AKSceneChanged,
         Layout,
 
+        ColorScheme,
         Vibrancy,
 
         /* Louvre */

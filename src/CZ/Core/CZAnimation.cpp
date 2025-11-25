@@ -6,10 +6,10 @@
 
 using namespace CZ;
 
-CZAnimation::CZAnimation(UInt32 durationMs, const Callback &onUpdate, const Callback &onFinish) noexcept :
+CZAnimation::CZAnimation(Callback onUpdate, Callback onFinish, bool oneshot) noexcept :
     m_onUpdate(onUpdate),
-    m_duration(durationMs),
-    m_onFinish(onFinish)
+    m_onFinish(onFinish),
+    m_oneshot(oneshot)
 {
     auto core { CZCore::Get() };
     assert(core && "CZAnimations must be created after a CZCore");
@@ -19,7 +19,6 @@ CZAnimation::CZAnimation(UInt32 durationMs, const Callback &onUpdate, const Call
 CZAnimation::~CZAnimation() noexcept
 {
     notifyDestruction();
-    stop();
 
     auto core { CZCore::Get() };
 
@@ -37,24 +36,17 @@ CZAnimation::~CZAnimation() noexcept
     }
 }
 
-void CZAnimation::OneShot(UInt32 durationMs, const Callback &onUpdate, const Callback &onFinish) noexcept
+void CZAnimation::setOnUpdateCallback(Callback onUpdate) noexcept
 {
-    CZAnimation *anim { new CZAnimation(durationMs, onUpdate, onFinish) };
-    anim->m_destroyOnFinish = true;
-    anim->start();
-}
-
-void CZAnimation::setOnUpdateCallback(const Callback &onUpdate) noexcept
-{
-    if (m_running)
+    if (isRunning())
         return;
 
     m_onUpdate = onUpdate;
 }
 
-void CZAnimation::setOnFinishCallback(const Callback &onFinish) noexcept
+void CZAnimation::setOnFinishCallback(Callback onFinish) noexcept
 {
-    if (m_running)
+    if (isRunning())
         return;
 
     m_onFinish = onFinish;
@@ -62,12 +54,12 @@ void CZAnimation::setOnFinishCallback(const Callback &onFinish) noexcept
 
 void CZAnimation::start() noexcept
 {
-    if (m_running)
+    if (isRunning())
         return;
 
-    m_value = 0.0;
-    m_beginTime = std::chrono::steady_clock::now();
-    m_running = true;
+    m_startTime = std::chrono::steady_clock::now();
+    m_isRunning = true;
+    onStart();
 
     auto core { CZCore::Get() };
 
@@ -77,24 +69,14 @@ void CZAnimation::start() noexcept
         return;
     }
 
+    core->m_animationsTimer->start(8);
+
     if (m_onUpdate)
-    {
-        core->m_animationsTimer->start(8);
         m_onUpdate(this);
-    }
 }
 
-void CZAnimation::stop()
+void CZAnimation::stop() noexcept
 {
-    if (!m_running)
-        return;
-
-    m_value = 1.0;
-    m_running = false;
-
-    if (m_onFinish)
-        m_onFinish(this);
-
-    if (m_destroyOnFinish)
-        m_pendingDestroy = true;
+    m_isRunning = false;
+    m_pendingDestroy = m_oneshot;
 }

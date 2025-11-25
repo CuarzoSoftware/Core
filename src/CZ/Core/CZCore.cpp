@@ -311,8 +311,6 @@ void CZCore::scheduleTimer() noexcept
 
 void CZCore::updateAnimations() noexcept
 {
-    Int64 elapsed;
-    Int64 duration;
     bool anyRunning { false };
 
     for (CZAnimation *a : m_animations)
@@ -334,34 +332,34 @@ retry:
 
         a->m_processed = true;
 
-        if (!a->m_running)
+        if (!a->isRunning())
             continue;
 
-        elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-                      std::chrono::steady_clock::now() - a->m_beginTime).count();
+        a->onUpdate();
 
-        duration = static_cast<Int64>(a->m_duration);
-
-        if (elapsed >= duration)
-            a->m_value = 1.0;
-        else
-            a->m_value = static_cast<Float64>(elapsed)/static_cast<Float64>(duration);
-
-        if (a->m_onUpdate)
+        if (a->isRunning())
         {
             anyRunning = true;
-            a->m_onUpdate(a);
 
-            if (m_animationsChanged)
-                goto retry;
+            if (a->m_onUpdate)
+            {
+                a->m_onUpdate(a);
+
+                if (m_animationsChanged)
+                    goto retry;
+            }
         }
-
-        if (a->m_value == 1.0)
+        else
         {
             a->stop();
 
-            if (m_animationsChanged)
-                goto retry;
+            if (a->m_onFinish)
+            {
+                a->m_onFinish(a);
+
+                if (m_animationsChanged)
+                    goto retry;
+            }
         }
     }
 

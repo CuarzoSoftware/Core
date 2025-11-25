@@ -21,6 +21,8 @@ namespace CZ
     class CZBooleanEventSource;
     class CZTimer;
     class CZAnimation;
+    class CZLinearAnimation;
+    class CZSpringAnimation;
     class CZEase;
     class CZSafeEventQueue;
     class CZLockGuard;
@@ -82,6 +84,7 @@ namespace CZ
     class CZInputDeviceUnpluggedEvent;
 
     class CZWindowStateEvent;
+    class CZColorSchemeEvent;
 
     /// @brief 64 bits unsigned integer
     typedef uint64_t UInt64;
