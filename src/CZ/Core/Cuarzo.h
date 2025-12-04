@@ -45,6 +45,7 @@ namespace CZ
     class CZVectorUtils;
     class CZMathUtils;
     class CZSetUtils;
+    class CZColorUtils;
 
     class CZEvent;
     class CZDestroyEvent;
