@@ -270,9 +270,8 @@ retry:
 
 void CZCore::scheduleTimer() noexcept
 {
-    // Find the earliest timer to expire
-    auto closest { std::chrono::steady_clock::time_point::max() };
-    bool foundOne { false };
+    auto closest = std::chrono::steady_clock::time_point::max();
+    bool foundOne = false;
 
     for (CZTimer *t : m_timers)
     {
@@ -281,26 +280,31 @@ void CZCore::scheduleTimer() noexcept
 
         foundOne = true;
 
-        auto exp { t->m_beginTime + std::chrono::milliseconds(t->m_timeoutMs) };
-
+        auto exp = t->m_beginTime + std::chrono::milliseconds(t->m_timeoutMs);
         if (exp < closest)
             closest = exp;
     }
 
     if (!foundOne)
+    {
+        // optionally disarm timerfd
+        itimerspec disarm{};
+        timerfd_settime(m_timersSource->fd(), 0, &disarm, nullptr);
         return;
+    }
 
-    Int64 ms { std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now() - closest).count() };
+    auto diff = closest - std::chrono::steady_clock::now();
+    if (diff < std::chrono::nanoseconds(1))
+        diff = std::chrono::nanoseconds(1);
 
-    if (ms <= 0)
-        ms = 1;
-
-    itimerspec timeout {};
-    timeout.it_interval.tv_sec = 0;
-    timeout.it_interval.tv_nsec = 0;
-    timeout.it_value.tv_sec  = ms / 1000;
-    timeout.it_value.tv_nsec = (ms % 1000) * 1'000'000;
+    itimerspec timeout{};
+    timeout.it_interval = {0, 0};
+    timeout.it_value.tv_sec =
+        std::chrono::duration_cast<std::chrono::seconds>(diff).count();
+    timeout.it_value.tv_nsec =
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            diff % std::chrono::seconds(1)
+            ).count();
 
     if (timerfd_settime(m_timersSource->fd(), 0, &timeout, nullptr) == -1)
     {

@@ -12,13 +12,13 @@ CZSpringAnimation::CZSpringAnimation(Float64 from, Float64 to, Float64 initialVe
     m_dampingRatio(dampingRatio)
 {
     m_value = a;
-    m_naturalFreq = std::sqrt(k* 0.00001);
+    m_naturalFreq = std::sqrt(k* 0.01);
 }
 
 void CZSpringAnimation::setStiffness(Float64 stiffness) noexcept
 {
     k = stiffness;
-    m_naturalFreq = std::sqrt(k * 0.00001);
+    m_naturalFreq = std::sqrt(k * 0.01);
 }
 
 void CZSpringAnimation::onStart() noexcept

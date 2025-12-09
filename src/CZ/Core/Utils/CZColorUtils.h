@@ -47,6 +47,54 @@ public:
             cA.fA * t + cB.fA * inv
         };
     }
+
+    static constexpr Float32 U8ToFloat32(UInt8 x) noexcept { return x * (1.0f / 255.0f); }
+
+    static constexpr UInt8 Float32ToU8(Float32 x) noexcept { return (UInt8)std::clamp(x * 255.0f + 0.5f, 0.0f, 255.0f); }
+
+    static constexpr SkColor SrcOver(SkColor A, SkColor B) noexcept
+    {
+        // Extract unpremultiplied 0–255 channels
+        Float32 Ar = U8ToFloat32(SkColorGetR(A));
+        Float32 Ag = U8ToFloat32(SkColorGetG(A));
+        Float32 Ab = U8ToFloat32(SkColorGetB(A));
+        Float32 Aa = U8ToFloat32(SkColorGetA(A));
+
+        Float32 Br = U8ToFloat32(SkColorGetR(B));
+        Float32 Bg = U8ToFloat32(SkColorGetG(B));
+        Float32 Bb = U8ToFloat32(SkColorGetB(B));
+        Float32 Ba = U8ToFloat32(SkColorGetA(B));
+
+        // Convert to premultiplied
+        Float32 Apr = Ar * Aa;
+        Float32 Apg = Ag * Aa;
+        Float32 Apb = Ab * Aa;
+
+        Float32 Bpr = Br * Ba;
+        Float32 Bpg = Bg * Ba;
+        Float32 Bpb = Bb * Ba;
+
+        // ---- kSrcOver : B over A ----
+        Float32 outA  = Ba + Aa * (1.0f - Ba);
+        Float32 outPr = Bpr + Apr * (1.0f - Ba);
+        Float32 outPg = Bpg + Apg * (1.0f - Ba);
+        Float32 outPb = Bpb + Apb * (1.0f - Ba);
+
+        // Convert back to unpremultiplied
+        Float32 invA = (outA > 0.0f) ? (1.0f / outA) : 0.0f;
+
+        UInt8 r = Float32ToU8(outPr * invA);
+        UInt8 g = Float32ToU8(outPg * invA);
+        UInt8 b = Float32ToU8(outPb * invA);
+        UInt8 a = Float32ToU8(outA);
+
+        return SkColorSetARGB(a, r, g, b);
+    }
+
+    static constexpr SkColor StateSrcOver(SkColor A, SkColor B, Float32 opacity) noexcept
+    {
+        return SrcOver(A, SkColorSetA(B, SkColorGetA(B) * std::clamp(opacity, 0.f, 1.f)));
+    }
 };
 
 #endif // CZCOLORUTILS_H
