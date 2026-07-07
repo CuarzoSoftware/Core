@@ -9,7 +9,7 @@ std::shared_ptr<CZEventSource> CZEventSource::Make(int fd, UInt32 events, CZOwn 
 {
     auto core { CZCore::Get() };
 
-    if (core.use_count() == 1)
+    if (!core)
     {
         CZLog(CZError, CZLN, "Missing CZCore");
         if (own == CZOwn::Own) close(fd);
@@ -56,4 +56,23 @@ CZEventSource::~CZEventSource() noexcept
 {
     if (m_own == CZOwn::Own)
         close(m_fd);
+}
+
+void CZEventSource::setEvents(UInt32 events) noexcept
+{
+    if (events == m_event.events)
+        return;
+
+    m_event.events = events;
+
+    auto core { CZCore::Get() };
+
+    if (core.use_count() == 1)
+    {
+        CZLog(CZError, CZLN, "Missing CZCore");
+        return;
+    }
+
+    if (epoll_ctl(core->m_epollFd, EPOLL_CTL_MOD, fd(), &m_event) == -1)
+        CZLog(CZError, CZLN, "EPOLL_CTL_MOD failed");
 }

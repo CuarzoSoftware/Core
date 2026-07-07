@@ -33,8 +33,9 @@ namespace CZ
     class CZSignalBase;
     template<typename...Args> class CZSignal;
     class CZListener;
-    template<typename...Args> class CZListenerTemplate;
+    template<class F, class...Args> class CZListenerTemplate;
     class CZLogger;
+    class CZBus;
 
     struct CZPresentationTime;
     struct CZRRect;

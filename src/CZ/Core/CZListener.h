@@ -3,41 +3,56 @@
 
 #include <CZ/Core/Cuarzo.h>
 #include <cstddef>
-#include <functional>
+#include <tuple>
+#include <utility>
+#include <vector>
 
 class CZ::CZListener
 {
 public:
-    ~CZListener();
+    virtual ~CZListener();
 
     bool wasNotified() const noexcept
     {
         return notified;
     }
+
+    virtual void invoke(void *argsTuple) = 0;
+
 protected:
     CZListener(CZObject *object, CZSignalBase *signal) noexcept;
+
     friend class CZSignalBase;
+
     CZSignalBase *signal;
     CZObject *object;
-    size_t signalLink, objectLink;
-    bool notified { false };
+    size_t signalLink{}, objectLink{};
+    bool notified{false};
 };
 
-template<class...Args>
-class CZ::CZListenerTemplate : public CZListener
+template<class F, class...Args>
+class CZ::CZListenerTemplate final : public CZListener
 {
 public:
-    CZListenerTemplate(CZObject *object, CZSignalBase *signal, const std::function<void(Args...)> &callback) noexcept :
-        CZListener(object, signal),
-        m_callback(callback)
+    CZListenerTemplate(CZObject *object, CZSignalBase *signal, F&& callback) noexcept
+        : CZListener(object, signal)
+        , m_callback(std::forward<F>(callback))
     {}
 
-    const std::function<void(Args...)> &callback() const noexcept
+    void invoke(void *argsTuple) override
     {
-        return m_callback;
+        auto &t = *static_cast<std::tuple<Args...>*>(argsTuple);
+        call(t, std::index_sequence_for<Args...>{});
     }
+
 private:
-    std::function<void(Args...)> m_callback;
+    template<std::size_t... I>
+    void call(std::tuple<Args...> &t, std::index_sequence<I...>)
+    {
+        m_callback(std::get<I>(t)...);
+    }
+
+    F m_callback;
 };
 
 class CZ::CZSignalBase

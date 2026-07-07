@@ -4,6 +4,7 @@
 #include <CZ/Core/CZAnimation.h>
 #include <CZ/Core/CZLockGuard.h>
 #include <CZ/Core/CZKeymap.h>
+#include <CZ/Core/CZBus.h>
 #include <CZ/Core/Events/CZEvent.h>
 #include <sys/timerfd.h>
 
@@ -40,6 +41,25 @@ int CZCore::dispatch(int msTimeout) noexcept
 {
     updateEventSources();
 
+    if (msTimeout <= -1)
+        msTimeout = -1;
+    else if (msTimeout > 0)
+    {
+        if (auto bus = CZBus::GetUser())
+        {
+            auto timeout { bus->timeoutMS() };
+            if (timeout != -1)
+                msTimeout = std::min(timeout, msTimeout);
+        }
+
+        if (auto bus = CZBus::GetSystem())
+        {
+            auto timeout { bus->timeoutMS() };
+            if (timeout != -1)
+                msTimeout = std::min(timeout, msTimeout);
+        }
+    }
+
     const auto ret { epoll_wait(m_epollFd, m_epollEvents.data(), m_epollEvents.size(), msTimeout) };
 
     if (ret == -1)
@@ -54,7 +74,7 @@ int CZCore::dispatch(int msTimeout) noexcept
         if (!source->m_callback || source->m_self.use_count() == 1)
             continue;
 
-        source->m_callback(source->fd(), m_epollEvents[i].events);
+        source->m_callback(source->fd(), m_epollEvents[i].events, source);
     }
 
     CZSafeEventQueue tmp { std::move(m_eventQueue) };
@@ -185,7 +205,7 @@ bool CZCore::initTimersSource() noexcept
         return false;
     }
 
-    m_timersSource = CZEventSource::Make(fd, EPOLLIN, CZOwn::Own, [this](int, UInt32) {
+    m_timersSource = CZEventSource::Make(fd, EPOLLIN, CZOwn::Own, [this](int, UInt32, auto) {
         updateTimers();
     });
 

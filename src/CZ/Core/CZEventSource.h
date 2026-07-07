@@ -10,12 +10,13 @@
 class CZ::CZEventSource final : public CZObject
 {
 public:
-    using Callback = std::function<void(int fd, UInt32 events)>;
+    using Callback = std::function<void(int fd, UInt32 events, CZEventSource *source)>;
 
     static std::shared_ptr<CZEventSource> Make(int fd, UInt32 events, CZOwn own, const Callback &callback) noexcept;
     ~CZEventSource() noexcept;
     int fd() const noexcept { return m_fd; };
     UInt32 events() const noexcept { return m_event.events; };
+    void setEvents(UInt32 events) noexcept;
 private:
     friend class CZCore;
     CZEventSource(int fd, UInt32 events, CZOwn own, const Callback &callback) noexcept : m_callback(callback), m_fd(fd), m_own(own)

@@ -50,7 +50,7 @@ public:
     }
 
     template<typename... Args>
-    constexpr void operator()(CZLogLevel level, std::format_string<Args...> fmt, Args&&... args) const
+    void operator()(CZLogLevel level, std::format_string<Args...> fmt, Args&&... args) const
     {
         if (level > *m_lvl)
             return;
@@ -62,7 +62,7 @@ public:
     }
 
     template<typename... Args>
-    constexpr void operator()(CZLogLevel level, std::source_location source, std::format_string<Args...> fmt, Args&&... args) const
+    void operator()(CZLogLevel level, std::source_location source, std::format_string<Args...> fmt, Args&&... args) const
     {
         if (level > *m_lvl)
             return;

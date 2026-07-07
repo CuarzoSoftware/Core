@@ -8,16 +8,28 @@ template<class...Args>
 class CZ::CZSignal : public CZSignalBase
 {
 public:
-
-    CZListener *subscribe(CZObject *listenerOwner, const std::function<void(Args...)> &callback) noexcept
+    template<typename F>
+    CZListener* subscribe(CZObject *listenerOwner, F&& callback) noexcept
     {
-        assert("Invalid subscriber object" && listenerOwner);
-        listeners.push_back(new CZListenerTemplate<Args...>(listenerOwner, this, callback));
+        assert(listenerOwner);
+
+        using Fn = std::decay_t<F>;
+
+        listeners.push_back(
+            new CZListenerTemplate<Fn, Args...>(
+                listenerOwner,
+                this,
+                std::forward<F>(callback)
+                )
+            );
+
         return listeners.back();
     }
 
-    void notify(Args...data)
+    void notify(Args... data)
     {
+        std::tuple<Args...> argsTuple(std::forward<Args>(data)...);
+
         for (auto *listener : listeners)
             setNotified(*listener, false);
 
@@ -30,7 +42,7 @@ public:
                 continue;
 
             setNotified(*listener, true);
-            static_cast<CZ::CZListenerTemplate<Args...>*>(listener)->callback()(data...);
+            listener->invoke(&argsTuple);
 
             if (changed)
                 goto retry;

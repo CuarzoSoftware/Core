@@ -3,6 +3,7 @@
 
 #include <CZ/Core/CZObject.h>
 #include <chrono>
+#include <functional>
 
 /**
  * @brief Base class for animations.
