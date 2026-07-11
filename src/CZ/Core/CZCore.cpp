@@ -391,6 +391,14 @@ retry:
         m_animationsTimer->start(m_animationInteval);
 }
 
+bool CZCore::hasRunningAnimations() const noexcept
+{
+    for (CZAnimation *a : m_animations)
+        if (a->isRunning())
+            return true;
+    return false;
+}
+
 void CZCore::setAnimationInterval(UInt64 interval) noexcept
 {
     if (interval == m_animationInteval)

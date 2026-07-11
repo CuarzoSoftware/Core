@@ -119,11 +119,20 @@ public:
     void setAnimationInterval(UInt64 interval) noexcept;
 
     /**
-     * @brief Returns the number of currently active animations.
+     * @brief Returns the number of registered animation objects.
      *
-     * @return Count of running animations.
+     * @note This counts every registered CZAnimation, including non-oneshot ones that have already
+     *       stopped (they persist until destroyed). To decide whether continued repainting is
+     *       needed, use hasRunningAnimations() instead.
      */
     size_t animationCount() const noexcept { return m_animations.size(); }
+
+    /**
+     * @brief Whether any registered animation is currently running.
+     *
+     * @return true if at least one animation is running, false otherwise.
+     */
+    bool hasRunningAnimations() const noexcept;
 
     void setKeymap(std::shared_ptr<CZKeymap> keymap) noexcept;
     std::shared_ptr<CZKeymap> keymap() const noexcept { return m_keymap; }
