@@ -2,6 +2,7 @@
 #define CZ_CUARZO_H
 
 #include <cstdint>
+#include <CZ/skia/core/SkColor.h>
 
 #define CZ_UNUSED(object){(void)object;}
 #define CZ_DISABLE_COPY(ClassName) \
@@ -47,6 +48,10 @@ namespace CZ
     class CZMathUtils;
     class CZSetUtils;
     class CZColorUtils;
+    template<class T> class CZAdaptive;
+
+    /** @brief A color with distinct light and dark appearance values (see CZAdaptive.h). */
+    using CZAdaptiveColor = CZAdaptive<SkColor>;
 
     class CZEvent;
     class CZDestroyEvent;
