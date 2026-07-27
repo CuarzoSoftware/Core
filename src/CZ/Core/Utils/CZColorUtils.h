@@ -96,12 +96,17 @@ public:
         return SrcOver(A, SkColorSetA(B, SkColorGetA(B) * std::clamp(opacity, 0.f, 1.f)));
     }
 
-    /** @brief Whether @p c is perceptually dark (Rec. 601 luma below the midpoint). */
-    static constexpr bool IsColorDark(SkColor c) noexcept
+    /**
+     * @brief Whether @p c is perceptually dark (Rec. 601 luma below @p threshold).
+     *
+     * @p threshold defaults to the 0.5 midpoint. Ignores alpha. Callers that decide a contrasting
+     * foreground may raise it so mid-luminance fills (e.g. saturated greens) are treated as dark.
+     */
+    static constexpr bool IsColorDark(SkColor c, Float32 threshold = 0.5f) noexcept
     {
         const Float32 luma {
             (0.299f * SkColorGetR(c) + 0.587f * SkColorGetG(c) + 0.114f * SkColorGetB(c)) / 255.f };
-        return luma < 0.5f;
+        return luma < threshold;
     }
 };
 
