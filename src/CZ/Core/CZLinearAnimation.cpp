@@ -23,7 +23,7 @@ void CZLinearAnimation::onStart() noexcept
     m_value = 0;
 }
 
-void CZLinearAnimation::onUpdate() noexcept
+void CZLinearAnimation::advance() noexcept
 {
     Int64 elapsed  { std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime()).count() };
     Int64 duration { static_cast<Int64>(m_duration) };

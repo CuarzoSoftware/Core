@@ -26,7 +26,7 @@ void CZSpringAnimation::onStart() noexcept
     m_value = a;
 }
 
-void CZSpringAnimation::onUpdate() noexcept
+void CZSpringAnimation::advance() noexcept
 {
     Float64 dt = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime()).count();
 

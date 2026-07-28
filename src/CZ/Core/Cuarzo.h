@@ -40,6 +40,7 @@ namespace CZ
 
     struct CZPresentationTime;
     struct CZRRect;
+    struct CZBorderRadius;
 
     class CZSharedMemory;
     class CZRegionUtils;

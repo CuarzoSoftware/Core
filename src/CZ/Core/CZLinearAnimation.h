@@ -68,7 +68,7 @@ public:
 protected:
     CZLinearAnimation(bool oneshot, UInt32 durationMs = 0, Callback onUpdate = nullptr, Callback onFinish = nullptr) noexcept;
     void onStart() noexcept override;
-    void onUpdate() noexcept override;
+    void advance() noexcept override;
 
 private:
     Int64 m_duration;

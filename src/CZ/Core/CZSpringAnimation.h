@@ -160,7 +160,7 @@ public:
 
 protected:
     void onStart() noexcept override;
-    void onUpdate() noexcept override;
+    void advance() noexcept override;
 
 private:
     Float64 v, k, b, a;

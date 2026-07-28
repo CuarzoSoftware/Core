@@ -359,31 +359,25 @@ retry:
         if (!a->isRunning())
             continue;
 
-        a->onUpdate();
+        a->advance();
 
         if (a->isRunning())
         {
             anyRunning = true;
 
-            if (a->m_onUpdate)
-            {
-                a->m_onUpdate(a);
+            a->onUpdate.notify(a);
 
-                if (m_animationsChanged)
-                    goto retry;
-            }
+            if (m_animationsChanged)
+                goto retry;
         }
         else
         {
-            a->stop();
+            a->pause();
 
-            if (a->m_onFinish)
-            {
-                a->m_onFinish(a);
+            a->onFinish.notify(a);
 
-                if (m_animationsChanged)
-                    goto retry;
-            }
+            if (m_animationsChanged)
+                goto retry;
         }
     }
 

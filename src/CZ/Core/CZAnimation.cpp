@@ -6,14 +6,20 @@
 
 using namespace CZ;
 
-CZAnimation::CZAnimation(Callback onUpdate, Callback onFinish, bool oneshot) noexcept :
-    m_onUpdate(onUpdate),
-    m_onFinish(onFinish),
+CZAnimation::CZAnimation(Callback onUpdateCb, Callback onFinishCb, bool oneshot) noexcept :
     m_oneshot(oneshot)
 {
     auto core { CZCore::Get() };
     assert(core && "CZAnimations must be created after a CZCore");
     core->m_animations.push_back(this);
+
+    // Constructor callbacks are kept as a convenience: subscribe them to the signals, owned by the
+    // animation itself so they live exactly as long as it does.
+    if (onUpdateCb)
+        onUpdate.subscribe(this, std::move(onUpdateCb));
+
+    if (onFinishCb)
+        onFinish.subscribe(this, std::move(onFinishCb));
 }
 
 CZAnimation::~CZAnimation() noexcept
@@ -36,27 +42,16 @@ CZAnimation::~CZAnimation() noexcept
     }
 }
 
-void CZAnimation::setOnUpdateCallback(Callback onUpdate) noexcept
-{
-    if (isRunning())
-        return;
-
-    m_onUpdate = onUpdate;
-}
-
-void CZAnimation::setOnFinishCallback(Callback onFinish) noexcept
-{
-    if (isRunning())
-        return;
-
-    m_onFinish = onFinish;
-}
-
 void CZAnimation::start() noexcept
 {
     if (isRunning())
         return;
 
+    reset();
+}
+
+void CZAnimation::reset() noexcept
+{
     m_startTime = std::chrono::steady_clock::now();
     m_isRunning = true;
     onStart();
@@ -71,11 +66,10 @@ void CZAnimation::start() noexcept
 
     core->m_animationsTimer->start(8);
 
-    if (m_onUpdate)
-        m_onUpdate(this);
+    onUpdate.notify(this);
 }
 
-void CZAnimation::stop() noexcept
+void CZAnimation::pause() noexcept
 {
     m_isRunning = false;
     m_pendingDestroy = m_oneshot;
