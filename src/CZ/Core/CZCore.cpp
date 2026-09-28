@@ -197,7 +197,7 @@ bool CZCore::initKeymap() noexcept
 
 bool CZCore::initTimersSource() noexcept
 {
-    auto fd { timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC) };
+    auto fd { timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC | TFD_NONBLOCK) };
 
     if (fd < 0)
     {
@@ -241,7 +241,7 @@ void CZCore::updateEventSources() noexcept
 void CZCore::updateTimers() noexcept
 {
     UInt64 expirations;
-    assert(read(m_timersSource->fd(), &expirations, sizeof(expirations)) == sizeof(expirations));
+    [[maybe_unused]] const auto ret { read(m_timersSource->fd(), &expirations, sizeof(expirations)) };
 
     // Disarm
     constexpr itimerspec timeout { {0, 0}, {0, 0} };
