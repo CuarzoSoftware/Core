@@ -2,6 +2,7 @@
 #include <CZ/Core/CZCore.h>
 #include <CZ/Core/CZLog.h>
 #include <sys/poll.h>
+#include <unistd.h>
 
 using namespace CZ;
 

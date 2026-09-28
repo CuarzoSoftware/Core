@@ -1,5 +1,6 @@
 #include <CZ/Core/CZSharedMemory.h>
 #include <random>
+#include <unistd.h>
 
 using namespace CZ;
 
