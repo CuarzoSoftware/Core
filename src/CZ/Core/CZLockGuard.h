@@ -4,8 +4,9 @@
 namespace CZ
 {
     // Do not use it
-    struct CZLockGuard
+    class CZLockGuard
     {
+    public:
         // Creates a scoped lock
         CZLockGuard() noexcept : didLock(CZLockGuard::Lock()) {}
 
