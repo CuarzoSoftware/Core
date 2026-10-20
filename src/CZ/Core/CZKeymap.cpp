@@ -3,6 +3,7 @@
 #include <CZ/Core/CZKeymap.h>
 #include <CZ/Core/CZLog.h>
 #include <cstring>
+#include <unistd.h>
 
 using namespace CZ;
 

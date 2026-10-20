@@ -7,6 +7,7 @@
 #include <CZ/Core/CZBus.h>
 #include <CZ/Core/Events/CZEvent.h>
 #include <sys/timerfd.h>
+#include <unistd.h>
 
 using namespace CZ;
 
