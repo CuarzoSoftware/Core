@@ -197,7 +197,9 @@ bool CZCore::initKeymap() noexcept
 
 bool CZCore::initTimersSource() noexcept
 {
-    auto fd { timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC) };
+    /* Non-blocking: the read in updateTimers() can race against a timerfd_settime from
+     * another thread (see the note there) and must not stall the loop */
+    auto fd { timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC | TFD_NONBLOCK) };
 
     if (fd < 0)
     {
@@ -240,8 +242,15 @@ void CZCore::updateEventSources() noexcept
 
 void CZCore::updateTimers() noexcept
 {
+    /* Clears the expiration that woke the loop up. The fd can legitimately have none: starting
+     * or stopping a timer from another thread (e.g. Louvre render threads during initializeGL/
+     * resizeGL/mode changes) re-arms the fd via timerfd_settime between the epoll wake-up and
+     * this read, clearing the pending expiration. The fd is non-blocking so the read then just
+     * fails with EAGAIN — with a blocking fd this stalled the entire main loop until the next
+     * expiration (e.g. freezing the compositor when a shortcut switched the output mode). */
     UInt64 expirations;
-    assert(read(m_timersSource->fd(), &expirations, sizeof(expirations)) == sizeof(expirations));
+    const auto bytesRead { read(m_timersSource->fd(), &expirations, sizeof(expirations)) };
+    CZ_UNUSED(bytesRead);
 
     // Disarm
     constexpr itimerspec timeout { {0, 0}, {0, 0} };
