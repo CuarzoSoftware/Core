@@ -34,7 +34,7 @@ install_data(
 cpp  = meson.get_compiler('cpp')
 pkg  = import('pkgconfig')
 
-cz_skia_dep = dependency('cz-skia', fallback:['cz-skia', 'cz_skia_dep'])
+cz_skia_dep = dependency('cz-skia', fallback:['cz-skia', 'cz_skia_dep'], include_type: 'system')
 
 deps = [
     cz_skia_dep,
