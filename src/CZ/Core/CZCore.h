@@ -7,6 +7,7 @@
 #include <CZ/Core/CZBooleanEventSource.h>
 #include <memory>
 #include <vector>
+#include <mutex>
 #include <sys/epoll.h>
 
 /**
@@ -172,6 +173,13 @@ private:
     std::vector<CZTimer*> m_timers;
     bool m_timersChanged { false };
 
+    /* Serializes the animation vector: CZAnimation ctor/dtor mutate
+     * it from the creating/owning thread while updateAnimations()
+     * iterates it on every thread that drives frames (Louvre calls
+     * it before each output's paintGL). Recursive: the
+     * m_pendingDestroy delete inside updateAnimations re-enters it
+     * through ~CZAnimation. */
+    mutable std::recursive_mutex m_animationsMutex;
     std::vector<CZAnimation*> m_animations;
     std::unique_ptr<CZTimer> m_animationsTimer;
     bool m_animationsChanged { false };

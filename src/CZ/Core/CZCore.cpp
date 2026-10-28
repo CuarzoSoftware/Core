@@ -345,6 +345,12 @@ void CZCore::scheduleTimer() noexcept
 
 void CZCore::updateAnimations() noexcept
 {
+    /* Frames are driven from multiple threads (Louvre ticks before
+     * every paintGL); hold the vector mutex for the whole pass so
+     * ctor/dtor mutations from other threads cannot race the
+     * iteration. Callbacks run under it: they must not block on
+     * locks a painter holds. */
+    std::lock_guard<std::recursive_mutex> lock(m_animationsMutex);
     bool anyRunning { false };
 
     for (CZAnimation *a : m_animations)
@@ -397,6 +403,7 @@ retry:
 
 bool CZCore::hasRunningAnimations() const noexcept
 {
+    std::lock_guard<std::recursive_mutex> lock(m_animationsMutex);
     for (CZAnimation *a : m_animations)
         if (a->isRunning())
             return true;
