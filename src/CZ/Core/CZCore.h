@@ -109,7 +109,7 @@ public:
      *
      * @return Current animation update interval in milliseconds.
      */
-    UInt64 animationInterval() const noexcept { return m_animationInteval; }
+    UInt64 animationInterval() const noexcept { return m_animationInterval; }
 
     /**
      * @brief Sets the interval in milliseconds for automatic animation updates.
@@ -175,7 +175,7 @@ private:
     std::vector<CZAnimation*> m_animations;
     std::unique_ptr<CZTimer> m_animationsTimer;
     bool m_animationsChanged { false };
-    UInt64 m_animationInteval { 8 };
+    UInt64 m_animationInterval { 8 };
 
     std::shared_ptr<CZKeymap> m_keymap;
 };

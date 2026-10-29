@@ -391,8 +391,8 @@ retry:
         }
     }
 
-    if (anyRunning && m_animationInteval > 0)
-        m_animationsTimer->start(m_animationInteval);
+    if (anyRunning && m_animationInterval > 0)
+        m_animationsTimer->start(m_animationInterval);
 }
 
 bool CZCore::hasRunningAnimations() const noexcept
@@ -405,13 +405,13 @@ bool CZCore::hasRunningAnimations() const noexcept
 
 void CZCore::setAnimationInterval(UInt64 interval) noexcept
 {
-    if (interval == m_animationInteval)
+    if (interval == m_animationInterval)
         return;
 
-    m_animationInteval = interval;
+    m_animationInterval = interval;
 
-    if (m_animationInteval > 0)
-        m_animationsTimer->start(m_animationInteval);
+    if (m_animationInterval > 0)
+        m_animationsTimer->start(m_animationInterval);
 }
 
 void CZCore::setKeymap(std::shared_ptr<CZKeymap> keymap) noexcept
