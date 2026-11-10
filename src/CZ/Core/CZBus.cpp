@@ -129,3 +129,21 @@ CZBus::~CZBus() noexcept
     sd_bus_unref(m_bus);
 }
 
+void CZBus::processQueued() noexcept
+{
+    // A zero timeout means "process now": messages are waiting in the read queue.
+    UInt64 usec { UINT64_MAX };
+
+    if (sd_bus_get_timeout(m_bus, &usec) < 0 || usec != 0)
+        return;
+
+    int r;
+
+    while ((r = sd_bus_process(m_bus, NULL)) > 0);
+
+    if (r < 0)
+        CZLog(CZError, CZLN, "sd_bus_process failed: {}", strerror(-r));
+
+    if (m_eventSource)
+        m_eventSource->setEvents(sd_bus_get_events(m_bus));
+}

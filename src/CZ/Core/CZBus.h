@@ -27,6 +27,15 @@ public:
     int timeoutMS() const noexcept;
     sd_bus *bus() const noexcept { return m_bus; }
 
+    /**
+     * @brief Processes messages sd-bus already read but didn't dispatch.
+     *
+     * A blocking call (e.g. sd_bus_call_method()) reads every message that arrives while it waits
+     * into an internal queue. The socket is then empty, so the event source isn't woken for them.
+     * CZCore calls this after each dispatch.
+     */
+    void processQueued() noexcept;
+
 private:
     friend class CZCore;
     CZBus(sd_bus *bus, Type type, std::shared_ptr<CZEventSource> eventSource) noexcept;

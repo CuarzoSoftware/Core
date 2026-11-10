@@ -81,6 +81,13 @@ int CZCore::dispatch(int msTimeout) noexcept
     CZSafeEventQueue tmp { std::move(m_eventQueue) };
     tmp.dispatch();
 
+    // Messages a blocking D-Bus call left queued (nothing would wake us up for them).
+    if (auto bus = CZBus::GetUser())
+        bus->processQueued();
+
+    if (auto bus = CZBus::GetSystem())
+        bus->processQueued();
+
     return ret;
 }
 
