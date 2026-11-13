@@ -37,6 +37,7 @@ namespace CZ
     template<class F, class...Args> class CZListenerTemplate;
     class CZLogger;
     class CZBus;
+    class CZColorSchemeMonitor;
 
     struct CZPresentationTime;
     struct CZRRect;
