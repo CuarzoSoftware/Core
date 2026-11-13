@@ -47,6 +47,7 @@ namespace CZ
     class CZRegionUtils;
     class CZStringUtils;
     class CZVectorUtils;
+    class CZProcess;
     class CZMathUtils;
     class CZSetUtils;
     class CZColorUtils;
