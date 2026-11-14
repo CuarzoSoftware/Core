@@ -49,7 +49,8 @@ void CZSpringAnimation::advance() noexcept
 bool CZSpringAnimation::isAtRest() const noexcept
 {
     const Float64 posThresh = 0.001;
-    const Float64 velThresh = 0.001;
+    // Barely moving (it would otherwise keep animating long after any visible motion)
+    const Float64 velThresh = 0.05;
     return (std::abs(m_value - b) < posThresh &&
             std::abs(v) < velThresh);
 }
