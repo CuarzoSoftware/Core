@@ -2,6 +2,7 @@
 #define CZ_CZSPRINGANIMATION_H
 
 #include <CZ/Core/CZAnimation.h>
+#include <chrono>
 
 /**
  * @brief Implements a physics-based spring animation using a damping harmonic oscillator model.
@@ -165,6 +166,7 @@ protected:
 private:
     Float64 v, k, b, a;
     Float64 m_naturalFreq, m_dampingRatio;
+    std::chrono::steady_clock::time_point m_lastTime; // Last advance()
 
     bool isAtRest() const noexcept;
     void computeNextState(Float64 dt) noexcept;

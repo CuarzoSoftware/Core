@@ -3,7 +3,7 @@
 
 using namespace CZ;
 
-CZSpringAnimation::CZSpringAnimation(Float64 from, Float64 to, Float64 initialVelocity, Float64 stiffness, Float64 dampingRatio, Callback onFinish, Callback onUpdate) noexcept :
+CZSpringAnimation::CZSpringAnimation(Float64 from, Float64 to, Float64 initialVelocity, Float64 stiffness, Float64 dampingRatio, Callback onUpdate, Callback onFinish) noexcept :
     CZAnimation(onUpdate, onFinish, false),
     v(initialVelocity),
     k(stiffness),
@@ -24,13 +24,19 @@ void CZSpringAnimation::setStiffness(Float64 stiffness) noexcept
 void CZSpringAnimation::onStart() noexcept
 {
     m_value = a;
+    m_lastTime = startTime();
 }
 
 void CZSpringAnimation::advance() noexcept
 {
-    Float64 dt = 0.001 * std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime()).count();
+    // The closed-form solution advances the current state (position, velocity) by the time elapsed
+    // since the last step (not since the start: the state is already the result of those steps).
+    const auto now { std::chrono::steady_clock::now() };
+    const Float64 dt { std::chrono::duration<Float64>(now - m_lastTime).count() };
+    m_lastTime = now;
 
-    computeNextState(dt);
+    if (dt > 0.0)
+        computeNextState(dt);
 
     if (isAtRest())
     {
