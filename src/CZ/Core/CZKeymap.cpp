@@ -166,7 +166,7 @@ void CZKeymap::feed(const CZKeyboardKeyEvent &e) noexcept
 
         if (!res.second)
         {
-            CZLog(CZWarning, CZLN, "Key code {} already pressed. Ignoring event...", e.code);
+            CZLog(CZWarning, CZLN, "Key already pressed. Ignoring event..."); // Never which one (see keyEvent())
             return;
         }
 
@@ -204,7 +204,7 @@ void CZKeymap::feed(const CZKeyboardKeyEvent &e) noexcept
 
         if (it == m_pressedKeys.end())
         {
-            CZLog(CZWarning, CZLN, "Key code {} already released. Ignoring event...", e.code);
+            CZLog(CZWarning, CZLN, "Key already released. Ignoring event..."); // Never which one (see keyEvent())
             return;
         }
 
@@ -224,7 +224,7 @@ void CZKeymap::feed(const CZKeyboardKeyEvent &e) noexcept
     m_modifiers.locked = xkb_state_serialize_mods(state(), XKB_STATE_MODS_LOCKED);
     m_modifiers.group = xkb_state_serialize_layout(state(), XKB_STATE_LAYOUT_EFFECTIVE);
 
-    CZLog(CZTrace, "Key Code: {}, UTF8: {}, State: {}", e.code, e.utf8, e.isPressed ? "Pressed" : "Released");
+    // Never log the keys (not even their codes): it'd be a keylogger (passwords end up in the journal)
 }
 
 void CZKeymap::setRepeatInfo(Int32 delayMs, Int32 rateMs) noexcept
