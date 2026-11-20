@@ -9,6 +9,8 @@
   </a>
 </p>
 
+> This project is part of the [Cuarzo Framework](https://github.com/CuarzoSoftware/Cuarzo). Follow the instructions there to build and install it.
+
 Core C++ classes and utilities shared across all projects within the Cuarzo framework.
 
 ### Environment Variables
