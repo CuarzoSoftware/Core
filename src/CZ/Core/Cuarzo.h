@@ -4,7 +4,9 @@
 #include <cstdint>
 #include <CZ/skia/core/SkColor.h>
 
+/** @brief Marks @p object as intentionally unused, silencing compiler warnings. */
 #define CZ_UNUSED(object){(void)object;}
+/** @brief Deletes the copy and move constructors and assignment operators of @p ClassName (use inside the class body). */
 #define CZ_DISABLE_COPY(ClassName) \
     ClassName(const ClassName&) = delete; \
     ClassName(ClassName&&) = delete; \

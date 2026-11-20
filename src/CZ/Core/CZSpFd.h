@@ -58,7 +58,10 @@ namespace CZ
             return *this;
         }
 
+        /** @brief Equal if both hold the same file descriptor number. */
         bool operator==(const CZSpFd& other) const noexcept { return m_fd == other.m_fd; }
+
+        /** @brief Orders by file descriptor number (e.g. for `std::set` / `std::map` keys). */
         bool operator<(const CZSpFd& other) const noexcept { return m_fd < other.m_fd; }
 
         /**
@@ -137,9 +140,11 @@ namespace CZ
 
 namespace std
 {
+    /** @brief Hashes a CZSpFd by its file descriptor number. */
     template<>
     struct hash<CZ::CZSpFd>
     {
+        /** @brief Returns the hash of `fd.get()`. */
         size_t operator()(const CZ::CZSpFd& fd) const noexcept
         {
             return std::hash<int>()(fd.get());

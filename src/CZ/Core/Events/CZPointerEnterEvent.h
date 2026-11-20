@@ -5,12 +5,15 @@
 #include <CZ/Core/CZTime.h>
 #include <CZ/skia/core/SkPoint.h>
 
+/**
+ * @brief The pointer entered the target.
+ */
 class CZ::CZPointerEnterEvent : public CZInputEvent
 {
 public:
     CZ_EVENT_DECLARE_COPY
     CZPointerEnterEvent() noexcept : CZInputEvent(Type::PointerEnter) {};
-    // Can be local or global depending on the context
+    /** @brief Pointer position. Can be local to the target or global, depending on the context. */
     mutable SkPoint pos {};
 };
 

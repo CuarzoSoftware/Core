@@ -122,6 +122,7 @@ namespace CZ
         MoveOrResize = 36,
     };
 
+    /** @brief Name of @p shape (e.g. "ContextMenu"), or "Unknown". */
     const std::string &CZCursorShapeString(CZCursorShape shape) noexcept;
 }
 

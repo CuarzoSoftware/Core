@@ -6,20 +6,31 @@
 
 namespace CZ
 {
+    /**
+     * @brief Alignment within a container, expressed as the CZEdge flags it sticks to.
+     *
+     * No edges means centered; one edge aligns to that side; two adjacent edges align to a corner.
+     */
     enum CZAlignment
     {
-        CZAlignCenter       = CZEdgeNone,
-        CZAlignLeft         = CZEdgeLeft,
-        CZAlignTop          = CZEdgeTop,
-        CZAlignRight        = CZEdgeRight,
-        CZAlignBottom       = CZEdgeBottom,
+        CZAlignCenter       = CZEdgeNone,   ///< Centered.
+        CZAlignLeft         = CZEdgeLeft,   ///< Left side, vertically centered.
+        CZAlignTop          = CZEdgeTop,    ///< Top side, horizontally centered.
+        CZAlignRight        = CZEdgeRight,  ///< Right side, vertically centered.
+        CZAlignBottom       = CZEdgeBottom, ///< Bottom side, horizontally centered.
 
-        CZAlignTopLeft      = CZEdgeTop | CZEdgeLeft,
-        CZAlignTopRight     = CZEdgeTop | CZEdgeRight,
-        CZAlignBottomRight  = CZEdgeBottom | CZEdgeRight,
-        CZAlignBottomLeft   = CZEdgeBottom | CZEdgeLeft
+        CZAlignTopLeft      = CZEdgeTop | CZEdgeLeft,       ///< Top-left corner.
+        CZAlignTopRight     = CZEdgeTop | CZEdgeRight,      ///< Top-right corner.
+        CZAlignBottomRight  = CZEdgeBottom | CZEdgeRight,   ///< Bottom-right corner.
+        CZAlignBottomLeft   = CZEdgeBottom | CZEdgeLeft     ///< Bottom-left corner.
     };
 
+    /**
+     * @brief Converts a set of edges into a CZAlignment.
+     *
+     * All four edges map to CZAlignCenter, and three edges map to the side shared by them
+     * (e.g. left, top and right map to CZAlignTop). Other combinations are cast directly.
+     */
     static inline constexpr CZAlignment AlignmentFromEdges(CZBitset<CZEdge> edges) noexcept
     {
         if (edges.get() == (CZEdgeLeft | CZEdgeTop | CZEdgeRight | CZEdgeBottom))
@@ -35,6 +46,7 @@ namespace CZ
         return static_cast<CZAlignment>(edges.get());
     }
 
+    /** @brief Human-readable name of @p alignment (e.g. "Top Left"), or "Unknown". */
     static inline constexpr std::string_view AlignmentString(CZAlignment alignment) noexcept
     {
         switch (alignment)

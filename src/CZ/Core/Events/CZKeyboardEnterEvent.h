@@ -3,6 +3,9 @@
 
 #include <CZ/Core/Events/CZInputEvent.h>
 
+/**
+ * @brief The target gained keyboard focus.
+ */
 class CZ::CZKeyboardEnterEvent : public CZInputEvent
 {
 public:

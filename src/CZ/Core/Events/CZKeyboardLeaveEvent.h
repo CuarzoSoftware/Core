@@ -3,6 +3,9 @@
 
 #include <CZ/Core/Events/CZInputEvent.h>
 
+/**
+ * @brief The target lost keyboard focus.
+ */
 class CZ::CZKeyboardLeaveEvent : public CZInputEvent
 {
 public:

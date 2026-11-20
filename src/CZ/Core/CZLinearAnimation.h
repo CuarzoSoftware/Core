@@ -66,8 +66,13 @@ public:
     UInt32 duration() const noexcept { return m_duration; }
 
 protected:
+    /** @brief Constructor used by OneShot(); @p oneshot makes the animation delete itself when it finishes. */
     CZLinearAnimation(bool oneshot, UInt32 durationMs = 0, Callback onUpdate = nullptr, Callback onFinish = nullptr) noexcept;
+
+    /** @brief Resets the value to 0. */
     void onStart() noexcept override;
+
+    /** @brief Sets the value to the elapsed fraction of the duration, finishing at 1. */
     void advance() noexcept override;
 
 private:

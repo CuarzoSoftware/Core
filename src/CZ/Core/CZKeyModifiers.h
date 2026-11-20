@@ -23,6 +23,7 @@ namespace CZ
         UInt32 group = 0;
     };
 
+    /** @brief Equal if all modifier fields are equal. */
     inline bool operator==(const CZKeyModifiers &a, const CZKeyModifiers &b)
     {
         return a.depressed == b.depressed &&
@@ -31,6 +32,7 @@ namespace CZ
                a.group     == b.group;
     }
 
+    /** @brief Negation of operator==(const CZKeyModifiers&, const CZKeyModifiers&). */
     inline bool operator!=(const CZKeyModifiers &a, const CZKeyModifiers &b)
     {
         return !(a == b);

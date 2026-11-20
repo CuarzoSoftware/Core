@@ -5,9 +5,17 @@
 #include <cassert>
 #include <type_traits>
 
+/**
+ * @brief Math helper functions.
+ */
 class CZ::CZMathUtils
 {
 public:
+    /**
+     * @brief Integer division rounded up, for unsigned integers.
+     *
+     * @p divisor must not be zero.
+     */
     template <typename T>
     requires std::is_integral_v<T> && std::is_unsigned_v<T>
     static constexpr T DivCeil(T dividend, T divisor) noexcept

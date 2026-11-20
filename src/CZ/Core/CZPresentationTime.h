@@ -19,7 +19,7 @@ struct CZ::CZPresentationTime
         HWCompletion    = 0x4, ///< Hardware signaled the start of the presentation.
     };
 
-    UInt64 paintEventId;    /// Id of the paint event
+    UInt64 paintEventId;    ///< Id of the paint event
 
     timespec time;          ///< The presentation timestamp.
     UInt32 period;          ///< Nanoseconds prediction until the next refresh. Zero if unknown.

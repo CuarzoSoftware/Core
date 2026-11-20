@@ -10,8 +10,8 @@
  * This event notifies that previously rendered content
  * has either been presented on screen or discarded.
  *
- * If @c discarded is set to @c true, the data in @ref info is invalid,
- * except for @ref CZPresentationTime::paintEventId, which remains meaningful.
+ * If @ref CZPresentationEvent::discarded is set to @c true, the data in @ref CZPresentationEvent::info is invalid,
+ * except for `CZPresentationTime::paintEventId`, which remains meaningful.
  */
 class CZ::CZPresentationEvent : public CZEvent
 {
@@ -19,7 +19,9 @@ public:
     CZ_EVENT_DECLARE_COPY
     CZPresentationEvent() noexcept : CZEvent(Type::Presentation) {};
 
+    /** @brief Presentation details (timestamp, refresh period, etc.). */
     CZPresentationTime info {};
+    /** @brief `true` if the content was discarded instead of presented. */
     bool discarded { false };
 };
 

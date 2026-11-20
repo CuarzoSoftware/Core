@@ -4,6 +4,9 @@
 #include <CZ/Core/Events/CZInputEvent.h>
 #include <CZ/skia/core/SkPoint.h>
 
+/**
+ * @brief Scroll (axis) event from a mouse wheel, touchpad, etc.
+ */
 class CZ::CZPointerScrollEvent : public CZInputEvent
 {
 public:
@@ -46,12 +49,24 @@ public:
 
     CZPointerScrollEvent() noexcept : CZInputEvent(Type::PointerScroll) {};
 
+    /** @brief Whether the event has a horizontal scroll value. */
     bool hasX {};
+    /** @brief Whether the event has a vertical scroll value. */
     bool hasY {};
+    /** @brief Relative direction of the horizontal axis (inverted with natural scrolling). */
     RelativeDirection relativeDirectionX {};
+    /** @brief Relative direction of the vertical axis (inverted with natural scrolling). */
     RelativeDirection relativeDirectionY {};
+    /** @brief Continuous scroll values for each axis (only meaningful for the axes flagged by @ref hasX and @ref hasY). */
     SkPoint axes {};
+    /**
+     * @brief Discrete scroll values for each axis.
+     *
+     * High-resolution values for @ref Wheel (120 per wheel detent) and wheel detents for @ref WheelLegacy.
+     * Unused for other sources.
+     */
     SkIPoint axesDiscrete {};
+    /** @brief Source of the scroll event. */
     Source source {};
 };
 

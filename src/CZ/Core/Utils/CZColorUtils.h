@@ -4,6 +4,9 @@
 #include <CZ/Core/Cuarzo.h>
 #include <CZ/skia/core/SkColor.h>
 
+/**
+ * @brief Color helper functions.
+ */
 class CZ::CZColorUtils
 {
 public:
@@ -48,10 +51,19 @@ public:
         };
     }
 
+    /** @brief Converts an 8-bit channel value [0, 255] to [0, 1]. */
     static constexpr Float32 U8ToFloat32(UInt8 x) noexcept { return x * (1.0f / 255.0f); }
 
+    /** @brief Converts a [0, 1] channel value to 8 bits [0, 255] (rounded and clamped). */
     static constexpr UInt8 Float32ToU8(Float32 x) noexcept { return (UInt8)std::clamp(x * 255.0f + 0.5f, 0.0f, 255.0f); }
 
+    /**
+     * @brief Composites @p B over @p A (source-over blending of unpremultiplied colors).
+     *
+     * @param A The bottom (destination) color.
+     * @param B The top (source) color.
+     * @return The resulting unpremultiplied color.
+     */
     static constexpr SkColor SrcOver(SkColor A, SkColor B) noexcept
     {
         // Extract unpremultiplied 0–255 channels
@@ -91,6 +103,13 @@ public:
         return SkColorSetARGB(a, r, g, b);
     }
 
+    /**
+     * @brief Composites @p B over @p A, with @p B's alpha multiplied by @p opacity.
+     *
+     * @param A The bottom (destination) color.
+     * @param B The top (source) color.
+     * @param opacity Opacity applied to @p B, clamped to [0, 1].
+     */
     static constexpr SkColor StateSrcOver(SkColor A, SkColor B, Float32 opacity) noexcept
     {
         return SrcOver(A, SkColorSetA(B, SkColorGetA(B) * std::clamp(opacity, 0.f, 1.f)));

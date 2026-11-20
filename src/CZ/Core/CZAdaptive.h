@@ -25,7 +25,9 @@ public:
     constexpr CZAdaptive(T both = T{}) noexcept :
         m_light(both), m_dark(both) {}
 
+    /** @brief The value used in the light appearance. */
     constexpr const T &light() const noexcept { return m_light; }
+    /** @brief The value used in the dark appearance. */
     constexpr const T &dark() const noexcept { return m_dark; }
 
     /** @brief The variant for @p scheme: dark for CZColorScheme::Dark, light otherwise (Light/Unknown). */
@@ -34,10 +36,12 @@ public:
         return scheme == CZColorScheme::Dark ? m_dark : m_light;
     }
 
+    /** @brief Equal if both the light and dark values are equal. */
     constexpr bool operator==(const CZAdaptive &other) const noexcept
     {
         return m_light == other.m_light && m_dark == other.m_dark;
     }
+    /** @brief Negation of operator==(). */
     constexpr bool operator!=(const CZAdaptive &other) const noexcept { return !(*this == other); }
 
 private:

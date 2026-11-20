@@ -3,9 +3,13 @@
 
 #include <CZ/Core/Cuarzo.h>
 
+/**
+ * @brief Helper functions for set containers (e.g. `std::set`, `std::unordered_set`).
+ */
 class CZ::CZSetUtils
 {
 public:
+    /** @brief Returns the elements present in both @p a and @p b. */
     template <typename Set>
     static inline Set Intersect(const Set &a, const Set &b)
     {
@@ -20,6 +24,7 @@ public:
         return result;
     }
 
+    /** @brief Returns the elements present in @p a, @p b or both. */
     template <typename Set>
     static inline Set Union(const Set &a, const Set &b)
     {

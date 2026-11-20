@@ -50,20 +50,22 @@ struct CZ::CZBorderRadius
         return std::max(std::max(fTL, fTR), std::max(fBR, fBL));
     }
 
+    /** @brief Equal if all four radii are equal. */
     constexpr bool operator==(const CZBorderRadius &other) const noexcept
     {
         return fTL == other.fTL && fTR == other.fTR && fBR == other.fBR && fBL == other.fBL;
     }
 
+    /** @brief Negation of operator==(). */
     constexpr bool operator!=(const CZBorderRadius &other) const noexcept
     {
         return !(*this == other);
     }
 
-    Int32 fTL { 0 };
-    Int32 fTR { 0 };
-    Int32 fBR { 0 };
-    Int32 fBL { 0 };
+    Int32 fTL { 0 }; ///< Top-left radius.
+    Int32 fTR { 0 }; ///< Top-right radius.
+    Int32 fBR { 0 }; ///< Bottom-right radius.
+    Int32 fBL { 0 }; ///< Bottom-left radius.
 };
 
 #endif // CZ_CZBORDERRADIUS_H

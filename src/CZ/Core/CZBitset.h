@@ -4,6 +4,7 @@
 #include <CZ/Core/Cuarzo.h>
 #include <type_traits>
 
+/// @cond INTERNAL
 namespace CZ
 {
     template<typename, bool>
@@ -24,6 +25,7 @@ namespace CZ
     template<typename T>
     struct numerical_underlying_type : _numerical_underlying_type<T, std::is_enum<T>::value> {};
 }
+/// @endcond
 
 /**
  * @brief Compact way of storing and managing conditions or states
@@ -224,11 +226,13 @@ public:
         return T(Flag(a) ^ Flag(b));
     }
 
+    /** @brief Converts the stored flags to @p T. */
     constexpr operator T() const noexcept
     {
         return T(m_flags);
     }
 
+    /** @brief Returns a bitset with all bits inverted. */
     constexpr CZBitset<T> operator ~() const noexcept
     {
         return CZBitset<T>(~m_flags);

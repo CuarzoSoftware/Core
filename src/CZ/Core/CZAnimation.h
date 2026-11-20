@@ -85,12 +85,28 @@ public:
     std::chrono::steady_clock::time_point startTime() const noexcept { return m_startTime; }
 
 protected:
+    /**
+     * @brief Registers the animation in CZCore and subscribes the optional callbacks to onUpdate and onFinish.
+     *
+     * A CZCore must exist. If @p oneshot is `true`, the animation is deleted by CZCore after it finishes or is paused.
+     */
     CZAnimation(Callback onUpdate, Callback onFinish, bool oneshot) noexcept;
+
+    /** @brief Called by start() and reset() to bring @ref m_value back to its initial state. */
     virtual void onStart() noexcept = 0;
-    // Advances the animation state for the current frame (was onUpdate(); renamed to free the name
-    // for the onUpdate signal). Implemented by the concrete animation types.
+
+    /**
+     * @brief Advances the animation state for the current frame.
+     *
+     * Called by CZCore on each step while running. Implementations update @ref m_value and set
+     * @ref m_isRunning to `false` when the animation has finished.
+     */
     virtual void advance() noexcept = 0;
+
+    /** @brief Current value, returned by value(). */
     Float64 m_value { 0.0 };
+
+    /** @brief Running state, returned by isRunning(). */
     bool m_isRunning { false };
 private:
     friend class CZCore;

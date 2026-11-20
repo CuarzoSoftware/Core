@@ -5,9 +5,13 @@
 #include <vector>
 #include <algorithm>
 
+/**
+ * @brief `std::vector` helper functions.
+ */
 class CZ::CZVectorUtils
 {
 public:
+    /** @brief Removes the first element equal to @p val, if any, keeping the order of the rest. */
     template <typename T>
     static inline void RemoveOne(std::vector<T>& vec, T val) noexcept
     {
@@ -16,6 +20,11 @@ public:
             vec.erase(it);
     }
 
+    /**
+     * @brief Removes the first element equal to @p val by replacing it with the last element (doesn't keep the order).
+     *
+     * @return `true` if an element was removed, `false` if not found.
+     */
     template <typename T>
     static inline bool RemoveOneUnordered(std::vector<T>& vec, T val) noexcept
     {
@@ -29,6 +38,7 @@ public:
         return true;
     }
 
+    /** @brief Deletes every element (with `delete`) from last to first and empties the vector. */
     template <typename T>
     static inline void DeleteAndPopBackAll(std::vector<T*>& vec) noexcept
     {

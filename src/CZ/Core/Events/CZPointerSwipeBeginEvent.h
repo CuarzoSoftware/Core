@@ -4,11 +4,15 @@
 #include <CZ/Core/Events/CZInputEvent.h>
 #include <CZ/skia/core/SkPoint.h>
 
+/**
+ * @brief A touchpad swipe gesture began.
+ */
 class CZ::CZPointerSwipeBeginEvent : public CZInputEvent
 {
 public:
     CZ_EVENT_DECLARE_COPY
     CZPointerSwipeBeginEvent() noexcept : CZInputEvent(Type::PointerSwipeBegin) {};
+    /** @brief Number of fingers involved in the gesture. */
     UInt32 fingers {};
 };
 

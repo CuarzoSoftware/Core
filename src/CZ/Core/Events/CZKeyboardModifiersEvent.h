@@ -14,6 +14,7 @@ class CZ::CZKeyboardModifiersEvent : public CZInputEvent
 public:
     CZ_EVENT_DECLARE_COPY
     CZKeyboardModifiersEvent() noexcept : CZInputEvent(Type::KeyboardModifiers) {};
+    /** @brief The current keyboard modifiers state. */
     CZKeyModifiers modifiers {};
 };
 

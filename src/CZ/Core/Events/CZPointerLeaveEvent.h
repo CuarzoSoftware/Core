@@ -4,6 +4,9 @@
 #include <CZ/skia/core/SkPoint.h>
 #include <CZ/Core/Events/CZInputEvent.h>
 
+/**
+ * @brief The pointer left the target.
+ */
 class CZ::CZPointerLeaveEvent : public CZInputEvent
 {
 public:

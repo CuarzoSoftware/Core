@@ -3,18 +3,20 @@
 
 namespace CZ
 {
+    /** @brief Window state flags (they can be combined). */
     enum CZWindowState
     {
-        CZWinNoState     = 0,
-        CZWinMaximized   = 1 << 1,
-        CZWinFullscreen  = 1 << 2,
-        CZWinResizing    = 1 << 3,
-        CZWinActivated   = 1 << 4,
-        CZWinTiledLeft   = 1 << 5,
-        CZWinTiledRight  = 1 << 6,
-        CZWinTiledTop    = 1 << 7,
-        CZWinTiledBottom = 1 << 8,
-        CZWinSuspended   = 1 << 9,
+        CZWinNoState     = 0,       ///< No state.
+        CZWinMaximized   = 1 << 1,  ///< Maximized.
+        CZWinFullscreen  = 1 << 2,  ///< Fullscreen.
+        CZWinResizing    = 1 << 3,  ///< Being interactively resized.
+        CZWinActivated   = 1 << 4,  ///< Active (has focus).
+        CZWinTiledLeft   = 1 << 5,  ///< Left edge tiled against something.
+        CZWinTiledRight  = 1 << 6,  ///< Right edge tiled against something.
+        CZWinTiledTop    = 1 << 7,  ///< Top edge tiled against something.
+        CZWinTiledBottom = 1 << 8,  ///< Bottom edge tiled against something.
+        CZWinSuspended   = 1 << 9,  ///< Suspended (e.g. not visible, so it shouldn't render).
+        /// All of the above states.
         CZWinAllWindowStates = CZWinMaximized | CZWinFullscreen | CZWinResizing | CZWinActivated |
                                CZWinTiledLeft | CZWinTiledRight | CZWinTiledTop | CZWinTiledBottom | CZWinSuspended
     };

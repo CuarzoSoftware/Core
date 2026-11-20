@@ -72,6 +72,7 @@ namespace CZ
         return static_cast<CZTransform>(flip | rotation);
     }
 
+    /** @brief Name of @p transform (e.g. "Rotated90"), or "Unknown". */
     static inline constexpr std::string_view TransformString(CZTransform transform) noexcept
     {
         switch (transform)

@@ -134,8 +134,13 @@ public:
      */
     bool hasRunningAnimations() const noexcept;
 
+    /** @brief Replaces the current keymap and emits @ref onKeymapChanged if it differs. */
     void setKeymap(std::shared_ptr<CZKeymap> keymap) noexcept;
+
+    /** @brief The current keymap. A default server keymap is created when CZCore is initialized. */
     std::shared_ptr<CZKeymap> keymap() const noexcept { return m_keymap; }
+
+    /** @brief Emitted after setKeymap() changes the keymap. */
     CZSignal<> onKeymapChanged;
 
     ~CZCore() noexcept;

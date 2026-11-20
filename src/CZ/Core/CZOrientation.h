@@ -3,10 +3,11 @@
 
 namespace CZ
 {
+    /** @brief Horizontal or vertical orientation. */
     enum class CZOrientation
     {
-        H,
-        V
+        H, ///< Horizontal.
+        V  ///< Vertical.
     };
 }
 

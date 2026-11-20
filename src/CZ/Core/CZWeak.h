@@ -5,12 +5,14 @@
 #include <CZ/Core/Cuarzo.h>
 #include <functional>
 
+/// @cond INTERNAL
 class CZ::CZWeakUtils
 {
 public:
     static std::vector<void *> &objectRefs(const CZObject *object) noexcept;
     static bool isObjectDestroyed(const CZObject *object) noexcept;
 };
+/// @endcond
 
 /**
  * @brief Weak reference to an CZObject
@@ -211,9 +213,11 @@ private:
 
 namespace std // Hash specialization
 {
+    /** @brief Hashes a CZWeak by the referenced object pointer. */
     template <class T>
     struct hash<CZ::CZWeak<T>>
     {
+        /** @brief Returns the hash of `w.get()`. */
         std::size_t operator()(const CZ::CZWeak<T> &w) const noexcept
         {
             return std::hash<T*>()(w.get());

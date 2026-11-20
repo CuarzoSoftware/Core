@@ -3,10 +3,14 @@
 
 #include <CZ/Core/CZTransform.h>
 
+/**
+ * @brief SkRegion helper functions.
+ */
 class CZ::CZRegionUtils
 {
 public:
 
+    /** @brief A shared empty region. */
     const static SkRegion &Empty() noexcept;
 
     /**
@@ -33,6 +37,11 @@ public:
      * @param factor The factor to multiply by.
      */
     static void Scale(SkRegion &region, Float32 factor) noexcept;
+    /**
+     * @brief Stores in @p dst the region @p src with each rectangle's components multiplied by @p factor.
+     *
+     * @p src and @p dst may be the same region.
+     */
     static void Scale(const SkRegion &src, SkRegion &dst, Float32 factor) noexcept;
 
     /**

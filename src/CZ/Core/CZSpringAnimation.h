@@ -160,7 +160,10 @@ public:
     void setVelocity(Float64 vel) noexcept { v = vel; }
 
 protected:
+    /** @brief Resets the value to the `from` point. */
     void onStart() noexcept override;
+
+    /** @brief Steps the spring by the time elapsed since the last step and finishes once it is at rest at the `to` point. */
     void advance() noexcept override;
 
 private:

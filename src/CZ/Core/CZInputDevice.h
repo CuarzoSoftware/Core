@@ -45,25 +45,28 @@ public:
         Switch      = static_cast<UInt8>(1) << 6,
     };
 
+    /** @brief Indicates which member of NativeHandle is valid. */
     enum class NativeHandleType
     {
-        None,
-        Libinput,
-        WlPointer,
-        WlKeyboard,
-        WlTouch,
-        Other
+        None,       ///< No native handle.
+        Libinput,   ///< NativeHandle::libinput
+        WlPointer,  ///< NativeHandle::wlPointer
+        WlKeyboard, ///< NativeHandle::wlKeyboard
+        WlTouch,    ///< NativeHandle::wlTouch
+        Other       ///< NativeHandle::other
     };
 
+    /** @brief Backend-specific handle of the device, see NativeHandleType. */
     union NativeHandle
     {
-        void *other;
-        libinput_device *libinput;
-        wl_pointer *wlPointer;
-        wl_keyboard *wlKeyboard;
-        wl_touch *wlTouch;
+        void *other;                ///< Handle of another type.
+        libinput_device *libinput;  ///< libinput device.
+        wl_pointer *wlPointer;      ///< Wayland pointer.
+        wl_keyboard *wlKeyboard;    ///< Wayland keyboard.
+        wl_touch *wlTouch;          ///< Wayland touch.
     };
 
+    /** @brief Creates an input device with the given properties. */
     static std::shared_ptr<CZInputDevice> Make(CZBitset<Capability> caps = 0, const std::string &name = "Unknown",
         UInt32 vendorId = 0, UInt32 productId = 0,  NativeHandleType nativeHandleType = NativeHandleType::None, NativeHandle nativeHandle = {}) noexcept
     {
@@ -97,6 +100,7 @@ public:
      */
     NativeHandle nativeHandle;
 
+    /** @brief Which member of @ref nativeHandle is valid. */
     NativeHandleType nativeHandleType;
 
 private:
