@@ -45,8 +45,9 @@ public:
     /**
      * @brief Creates a logger.
      *
-     * The level is CZSilent unless @p env is given and that environment variable holds a level
-     * number (0 to 6), e.g. `MY_APP_LOG_LEVEL=4` for CZInfo.
+     * The level is CZError (errors and fatal errors only) unless @p env is given and that
+     * environment variable holds a level number (0 to 6), e.g. `MY_APP_LOG_LEVEL=4` for CZInfo or
+     * `MY_APP_LOG_LEVEL=0` for nothing at all.
      *
      * @param ns Namespace printed before each message.
      * @param env Name of the environment variable to read the level from, or `nullptr`.
@@ -126,7 +127,7 @@ private:
         "\033[36m", // Debug   - Cyan
         "\033[37m"  // Trace   - Light Gray
     };
-    std::shared_ptr<CZLogLevel> m_lvl { new CZLogLevel() };
+    std::shared_ptr<CZLogLevel> m_lvl { new CZLogLevel(CZError) }; // Errors (and fatal ones) only by default
     std::string m_ns;
     std::string m_ctx;
 };

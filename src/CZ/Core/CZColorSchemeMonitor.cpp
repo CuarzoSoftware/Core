@@ -10,6 +10,7 @@ static constexpr const char *Path { "/org/freedesktop/portal/desktop" };
 static constexpr const char *Iface { "org.freedesktop.portal.Settings" };
 static constexpr const char *Namespace { "org.freedesktop.appearance" };
 static constexpr const char *Key { "color-scheme" };
+static constexpr UInt64 SyncReadTimeoutUs { 300000 }; // The first read, see the constructor
 
 static std::weak_ptr<CZColorSchemeMonitor> s_monitor;
 
@@ -59,7 +60,39 @@ CZColorSchemeMonitor::CZColorSchemeMonitor(std::shared_ptr<CZBus> bus) noexcept 
             return 0;
         }, nullptr, this);
 
-    // ...and the current value (async: the portal may need to be started)
+    // ...and the current value: right away if the portal answers soon (apps' first frame already
+    // in the right scheme), else asynchronously (e.g. the portal is still being started)
+    for (const char *method : { "ReadOne", "Read" })
+    {
+        sd_bus_message *call {}, *reply {};
+        sd_bus_error error { SD_BUS_ERROR_NULL };
+
+        if (sd_bus_message_new_method_call(m_bus->bus(), &call, Portal, Path, Iface, method) < 0 ||
+            sd_bus_message_append(call, "ss", Namespace, Key) < 0)
+        {
+            sd_bus_message_unref(call);
+            break;
+        }
+
+        const int ret { sd_bus_call(m_bus->bus(), call, SyncReadTimeoutUs, &error, &reply) };
+        sd_bus_message_unref(call);
+
+        if (ret >= 0)
+        {
+            set(ReadValue(reply));
+            sd_bus_message_unref(reply);
+            sd_bus_error_free(&error);
+            return;
+        }
+
+        // ReadOne is missing in older portals: Read then
+        const bool unknownMethod { sd_bus_error_has_name(&error, SD_BUS_ERROR_UNKNOWN_METHOD) != 0 };
+        sd_bus_error_free(&error);
+
+        if (!unknownMethod)
+            break;
+    }
+
     sd_bus_call_method_async(m_bus->bus(), &m_readSlot, Portal, Path, Iface, "ReadOne",
         [](sd_bus_message *m, void *data, sd_bus_error *) -> int {
             auto *monitor { static_cast<CZColorSchemeMonitor*>(data) };

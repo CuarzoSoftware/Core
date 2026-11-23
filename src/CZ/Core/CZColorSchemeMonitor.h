@@ -16,8 +16,10 @@ struct sd_bus_slot;
  * changes. Desktops set it e.g. through GNOME's `org.gnome.desktop.interface color-scheme`
  * (Firmament's Dark Mode).
  *
- * The first value is read asynchronously (the portal may need to be started): until then
- * colorScheme() is Light and known() is `false`; onChanged is emitted once it's read if it differs.
+ * The first value is read when it's created, waiting up to 300 ms for the portal (so apps can show
+ * their first frame in the right scheme). If the portal takes longer (e.g. it's being started), it's
+ * read asynchronously: until then colorScheme() is Light and known() is `false`, and onChanged is
+ * emitted once it's read if it differs.
  *
  * There is a single instance per process, shared through GetOrMake(). It requires CZCore (its D-Bus
  * connection is dispatched by CZCore's event loop).
