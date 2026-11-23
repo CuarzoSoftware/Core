@@ -6,6 +6,7 @@
 #include <csignal>
 #include <spawn.h>
 #include <sys/wait.h>
+#include <sys/resource.h>
 #include <unistd.h>
 
 extern char **environ;
@@ -77,6 +78,11 @@ namespace
 
     void Loop() noexcept
     {
+        // Apps get the normal priority, even if the process runs with a higher one (e.g. the desktop
+        // shell, see cuarzo-session): they inherit this thread's (raising the nice level is allowed)
+        if (getpriority(PRIO_PROCESS, 0) < 0)
+            setpriority(PRIO_PROCESS, 0, 0);
+
         while (true)
         {
             std::vector<std::string> args;
