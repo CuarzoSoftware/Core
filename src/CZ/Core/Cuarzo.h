@@ -41,6 +41,7 @@ namespace CZ
     class CZBus;
     class CZBusWorker;
     class CZColorSchemeMonitor;
+    class CZMouseSettings;
 
     struct CZPresentationTime;
     struct CZRRect;
